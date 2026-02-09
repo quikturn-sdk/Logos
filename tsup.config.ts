@@ -34,7 +34,7 @@ export default defineConfig([
     treeshake: true,
     outDir: "dist",
     platform: "node",
-    target: "node18",
+    target: "node22",
     ...esmCjsExtensions,
   },
 ]);

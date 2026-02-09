@@ -41,6 +41,9 @@ export {
 // --- URL Builder (runtime) ---
 export { logoUrl } from "./url-builder";
 
+// --- Header Parser (runtime) ---
+export { parseLogoHeaders, parseRetryAfter } from "./headers";
+
 // --- Error Classes (runtime) ---
 export {
   LogoError,
