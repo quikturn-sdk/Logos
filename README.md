@@ -5,7 +5,7 @@
 ## Features
 
 - **Zero-dependency URL builder** -- universal, works in any JavaScript runtime
-- **Browser client** -- blob URL management, retry/backoff, auto-scrape polling, event emission
+- **Browser client** -- blob URL management, retry/backoff, scrape polling, event emission
 - **Server client** -- Buffer output, ReadableStream streaming, concurrent batch operations
 - **Full TypeScript support** -- strict types, discriminated union error codes, generic response shapes
 - **Tree-shakeable** -- ESM and CJS dual builds; import only what you need
@@ -132,7 +132,6 @@ Constructs a fully-qualified Logos API URL. Pure function with no side effects.
 | `greyscale` | `boolean` | `false` | When `true`, applies saturation: 0 transformation |
 | `theme` | `"light" \| "dark"` | -- | Gamma curve adjustment (`"light"` = 0.9, `"dark"` = 1.12) |
 | `format` | `SupportedOutputFormat \| FormatShorthand` | `"image/png"` | Output image format |
-| `autoScrape` | `boolean` | `false` | Trigger background scrape if logo is not found |
 | `baseUrl` | `string` | `"https://logos.getquikturn.io"` | Override the API base URL |
 
 #### Types
@@ -156,7 +155,7 @@ import type {
   BrowserLogoResponse,
   ServerLogoResponse,
 
-  // Auto-scrape
+  // Scrape polling
   ScrapeJob,
   ScrapePendingResponse,
   ScrapeJobStatus,       // "pending" | "complete" | "failed"
@@ -219,7 +218,6 @@ Fetches a logo and returns a `BrowserLogoResponse`.
 | `greyscale` | `boolean` | `false` | Greyscale transformation |
 | `theme` | `"light" \| "dark"` | -- | Gamma curve adjustment |
 | `format` | `SupportedOutputFormat \| FormatShorthand` | `"image/png"` | Output format |
-| `autoScrape` | `boolean` | `false` | Enable auto-scrape polling |
 | `scrapeTimeout` | `number` | -- | Max time (ms) to wait for scrape completion |
 | `onScrapeProgress` | `(event: ScrapeProgressEvent) => void` | -- | Callback for scrape progress |
 | `signal` | `AbortSignal` | -- | Cancel the request |
@@ -442,24 +440,6 @@ client.get("github.com", { format: "webp" });
 |-------|-------|----------|
 | `"light"` | 0.9 | Light backgrounds |
 | `"dark"` | 1.12 | Dark backgrounds |
-
-## Auto-Scrape
-
-When a logo is not found in the database, the SDK can automatically trigger a background scrape and poll for completion.
-
-**Flow:** Request with `autoScrape: true` --> API returns `202 Accepted` with a scrape job --> SDK polls the job URL --> Logo becomes available --> SDK returns the final image.
-
-```ts
-const { url } = await client.get("brand-new-startup.com", {
-  autoScrape: true,
-  scrapeTimeout: 30_000, // wait up to 30 seconds
-  onScrapeProgress: (event) => {
-    console.log(`Scrape status: ${event.status}, progress: ${event.progress}%`);
-  },
-});
-```
-
-If the scrape does not complete within `scrapeTimeout`, a `ScrapeTimeoutError` is thrown.
 
 ## Rate Limits & Quotas
 

@@ -24,9 +24,9 @@ describe("logoUrl", () => {
   // Basic URL generation (T2.1 - T2.4)
   // -----------------------------------------------------------------------
   describe("basic URL generation", () => {
-    it("T2.1 - returns base URL with domain path when called with domain only", () => {
+    it("T2.1 - returns base URL with domain path and autoScrape when called with domain only", () => {
       const url = logoUrl("google.com");
-      expect(url).toBe("https://logos.getquikturn.io/google.com");
+      expect(url).toBe("https://logos.getquikturn.io/google.com?autoScrape=true");
     });
 
     it("T2.2 - includes token as query parameter", () => {
@@ -146,20 +146,12 @@ describe("logoUrl", () => {
   });
 
   // -----------------------------------------------------------------------
-  // AutoScrape (T2.20 - T2.21)
+  // AutoScrape (T2.20) — always enabled
   // -----------------------------------------------------------------------
-  describe("autoScrape option", () => {
-    it("T2.20 - includes autoScrape=true when autoScrape is true", () => {
-      const url = logoUrl("x.com", { autoScrape: true });
+  describe("autoScrape", () => {
+    it("T2.20 - always includes autoScrape=true", () => {
+      const url = logoUrl("x.com");
       expect(params(url).get("autoScrape")).toBe("true");
-    });
-
-    it("T2.21 - omits autoScrape param when false or undefined", () => {
-      const urlFalse = logoUrl("x.com", { autoScrape: false });
-      expect(params(urlFalse).has("autoScrape")).toBe(false);
-
-      const urlUndefined = logoUrl("x.com");
-      expect(params(urlUndefined).has("autoScrape")).toBe(false);
     });
   });
 
@@ -174,7 +166,6 @@ describe("logoUrl", () => {
         greyscale: true,
         theme: "dark",
         format: "webp",
-        autoScrape: true,
       });
 
       const p = params(url);

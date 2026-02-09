@@ -58,7 +58,6 @@ export interface BrowserClientOptions {
  * - `greyscale`       — When true, returns a greyscale image.
  * - `theme`           — "light" or "dark" gamma adjustment.
  * - `format`          — Output image format (MIME type or shorthand).
- * - `autoScrape`      — When true, triggers background scrape if logo is not found.
  * - `scrapeTimeout`   — Maximum time (ms) to wait for a scrape to complete.
  * - `onScrapeProgress`— Callback fired on each scrape poll.
  * - `signal`          — AbortSignal to cancel the request.
@@ -69,7 +68,6 @@ export interface GetOptions {
   greyscale?: boolean;
   theme?: ThemeOption;
   format?: SupportedOutputFormat | FormatShorthand;
-  autoScrape?: boolean;
   scrapeTimeout?: number;
   onScrapeProgress?: (event: ScrapeProgressEvent) => void;
   signal?: AbortSignal;
@@ -146,7 +144,6 @@ export class QuikturnLogos {
       greyscale: options?.greyscale,
       theme: options?.theme,
       format: options?.format,
-      autoScrape: options?.autoScrape,
       baseUrl: this.baseUrl,
     });
 
@@ -167,15 +164,13 @@ export class QuikturnLogos {
         this.emit("quotaWarning", remaining, limit),
     });
 
-    // 4. Handle 202 scrape responses when autoScrape is enabled
-    if (options?.autoScrape) {
-      response = await handleScrapeResponse(response, url, browserFetch, {
-        scrapeTimeout: options?.scrapeTimeout,
-        onScrapeProgress: options?.onScrapeProgress,
-        signal: options?.signal,
-        token: this.token,
-      });
-    }
+    // 4. Handle 202 scrape responses (always enabled)
+    response = await handleScrapeResponse(response, url, browserFetch, {
+      scrapeTimeout: options?.scrapeTimeout,
+      onScrapeProgress: options?.onScrapeProgress,
+      signal: options?.signal,
+      token: this.token,
+    });
 
     // 5. Check response body size before consuming
     const contentLength = response.headers.get("Content-Length");
@@ -220,7 +215,7 @@ export class QuikturnLogos {
    */
   getUrl(
     domain: string,
-    options?: Omit<GetOptions, "autoScrape" | "scrapeTimeout" | "onScrapeProgress" | "signal">,
+    options?: Omit<GetOptions, "scrapeTimeout" | "onScrapeProgress" | "signal">,
   ): string {
     return logoUrl(domain, {
       token: this.token,

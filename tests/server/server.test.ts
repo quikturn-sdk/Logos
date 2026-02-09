@@ -249,19 +249,18 @@ describe("QuikturnLogos (server)", () => {
   });
 
   // -----------------------------------------------------------------------
-  // get() with autoScrape (T5.29)
+  // get() scrape handling (T5.29) — always enabled
   // -----------------------------------------------------------------------
 
-  it("T5.29 - get() with autoScrape: true delegates to scrape poller", async () => {
+  it("T5.29 - get() always delegates to scrape poller", async () => {
     const scrapeResponse = mockResponse(200, { "Content-Type": "image/png" });
     vi.mocked(handleScrapeResponse).mockResolvedValueOnce(scrapeResponse);
 
     const client = new QuikturnLogos({ secretKey: "sk_test_123" });
-    await client.get("newsite.com", { autoScrape: true });
+    await client.get("newsite.com");
 
-    // handleScrapeResponse should have been called
+    // handleScrapeResponse should always be called
     expect(handleScrapeResponse).toHaveBeenCalledOnce();
-    // Verify the original response, URL, and a fetch function are passed
     expect(handleScrapeResponse).toHaveBeenCalledWith(
       expect.anything(), // original response
       expect.any(String), // original URL

@@ -45,7 +45,6 @@ export type FormatShorthand = "png" | "jpeg" | "webp" | "avif";
  * - `greyscale`  — When true, applies saturation: 0 transformation. Default: false.
  * - `theme`      — "light" (gamma 0.9) or "dark" (gamma 1.12).
  * - `format`     — Output image format. Accepts full MIME type or shorthand. Default: "image/png".
- * - `autoScrape` — When true, triggers a background scrape if the logo is not found. Default: false.
  * - `baseUrl`    — Override the default API base URL. Useful for testing or proxied environments.
  */
 export interface LogoRequestOptions {
@@ -55,7 +54,6 @@ export interface LogoRequestOptions {
   greyscale?: boolean;
   theme?: ThemeOption;
   format?: SupportedOutputFormat | FormatShorthand;
-  autoScrape?: boolean;
   baseUrl?: string;
 }
 

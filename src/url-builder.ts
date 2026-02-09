@@ -220,7 +220,6 @@ export function logoUrl(domain: string, options?: LogoRequestOptions): string {
     greyscale,
     theme,
     format,
-    autoScrape,
     baseUrl,
   } = options ?? {};
 
@@ -266,9 +265,7 @@ export function logoUrl(domain: string, options?: LogoRequestOptions): string {
     url.searchParams.set("format", resolvedFormat);
   }
 
-  if (autoScrape === true) {
-    url.searchParams.set("autoScrape", "true");
-  }
+  url.searchParams.set("autoScrape", "true");
 
   return url.toString();
 }
