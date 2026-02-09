@@ -128,6 +128,13 @@ export class QuikturnLogos {
    * @param domain  - The domain to fetch a logo for (e.g. "github.com").
    * @param options - Optional request configuration.
    * @returns A ServerLogoResponse containing the Buffer, content type, and metadata.
+   *
+   * @example
+   * ```ts
+   * const client = new QuikturnLogos({ secretKey: "sk_your_key" });
+   * const { buffer, contentType } = await client.get("github.com", { size: 256 });
+   * fs.writeFileSync("logo.png", buffer);
+   * ```
    */
   async get(
     domain: string,
@@ -207,6 +214,16 @@ export class QuikturnLogos {
    * @param domains - Array of domain strings to fetch logos for.
    * @param options - Optional batch configuration (concurrency, format, etc.).
    * @yields BatchResult items for each domain.
+   *
+   * @example
+   * ```ts
+   * const client = new QuikturnLogos({ secretKey: "sk_your_key" });
+   * for await (const result of client.getMany(["github.com", "gitlab.com"])) {
+   *   if (result.success) {
+   *     fs.writeFileSync(`${result.domain}.png`, result.buffer!);
+   *   }
+   * }
+   * ```
    */
   async *getMany(
     domains: string[],
@@ -240,6 +257,14 @@ export class QuikturnLogos {
    * @param options - Optional request configuration.
    * @returns A ReadableStream of the response body.
    * @throws {Error} If the response body is null (streaming not available).
+   *
+   * @example
+   * ```ts
+   * const client = new QuikturnLogos({ secretKey: "sk_your_key" });
+   * const stream = await client.getStream("github.com");
+   * const writable = fs.createWriteStream("logo.png");
+   * Readable.fromWeb(stream).pipe(writable);
+   * ```
    */
   async getStream(
     domain: string,

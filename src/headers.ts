@@ -73,6 +73,13 @@ function safeParseFloat(value: string | null, fallback: undefined): number | und
  *
  * @param headers - The `Headers` object from a fetch `Response`.
  * @returns A fully-populated `LogoMetadata` object.
+ *
+ * @example
+ * ```ts
+ * const response = await fetch(logoUrl("github.com"));
+ * const metadata = parseLogoHeaders(response.headers);
+ * console.log(metadata.cache.status); // "HIT" or "MISS"
+ * ```
  */
 export function parseLogoHeaders(headers: Headers): LogoMetadata {
   // Cache
@@ -142,6 +149,14 @@ export function parseLogoHeaders(headers: Headers): LogoMetadata {
  *
  * @param headers - The `Headers` object from a fetch `Response`.
  * @returns The retry delay in seconds, or `null` if not present.
+ *
+ * @example
+ * ```ts
+ * const retryAfter = parseRetryAfter(response.headers);
+ * if (retryAfter !== null) {
+ *   await new Promise((r) => setTimeout(r, retryAfter * 1000));
+ * }
+ * ```
  */
 export function parseRetryAfter(headers: Headers): number | null {
   const value = headers.get("Retry-After");

@@ -85,6 +85,14 @@ function computeIsValid(
  *
  * @param headers - The `Headers` object from a fetch `Response`.
  * @returns An `AttributionInfo` object, or `null` if no attribution header is present.
+ *
+ * @example
+ * ```ts
+ * const attribution = parseAttributionStatus(response.headers);
+ * if (attribution && !attribution.isValid) {
+ *   console.warn("Attribution required for free-tier usage");
+ * }
+ * ```
  */
 export function parseAttributionStatus(headers: Headers): AttributionInfo | null {
   const rawStatus = headers.get("X-Attribution-Status");

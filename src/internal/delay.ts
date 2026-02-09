@@ -9,8 +9,18 @@
 import { LogoError } from "../errors";
 
 /**
- * Promise-based delay that respects AbortSignal.
- * Rejects with LogoError if signal is aborted during the wait.
+ * Promise-based delay that respects an optional `AbortSignal`.
+ *
+ * Resolves after `ms` milliseconds unless the signal is aborted first,
+ * in which case the returned promise rejects with a `LogoError`.
+ *
+ * If the signal is already aborted at call time, rejects immediately
+ * without scheduling a timer.
+ *
+ * @param ms     - Delay duration in milliseconds.
+ * @param signal - Optional `AbortSignal` to cancel the delay early.
+ * @returns A promise that resolves after the delay or rejects on abort.
+ * @throws {LogoError} With code `ABORT_ERROR` if the signal is aborted.
  */
 export function delay(ms: number, signal?: AbortSignal): Promise<void> {
   if (signal?.aborted) {

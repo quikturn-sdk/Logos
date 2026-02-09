@@ -128,6 +128,13 @@ export class QuikturnLogos {
    * @param domain  - The domain to fetch a logo for (e.g. "github.com").
    * @param options - Optional request configuration.
    * @returns A BrowserLogoResponse containing the blob URL, raw Blob, content type, and metadata.
+   *
+   * @example
+   * ```ts
+   * const client = new QuikturnLogos({ token: "qt_abc123" });
+   * const { url, metadata } = await client.get("github.com", { size: 256 });
+   * document.querySelector("img")!.src = url;
+   * ```
    */
   async get(domain: string, options?: GetOptions): Promise<BrowserLogoResponse> {
     // 1. Build the API URL via the URL builder
@@ -190,6 +197,13 @@ export class QuikturnLogos {
    * @param domain  - The domain to build a URL for.
    * @param options - Optional request parameters (size, format, etc.).
    * @returns A fully-qualified Logos API URL string.
+   *
+   * @example
+   * ```ts
+   * const client = new QuikturnLogos({ token: "qt_abc123" });
+   * const url = client.getUrl("github.com", { size: 128, format: "webp" });
+   * // => "https://logos.getquikturn.io/github.com?token=qt_abc123&format=webp"
+   * ```
    */
   getUrl(
     domain: string,
