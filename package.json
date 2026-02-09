@@ -1,7 +1,7 @@
 {
   "name": "@quikturn/logos",
   "version": "0.1.0",
-  "description": "Quikturn Logo SDK — URL builder, browser client, and server client for the QuikTurn Logos API",
+  "description": "Quikturn Logo SDK — URL builder, browser client, and server client for the Quikturn Logos API",
   "type": "module",
   "sideEffects": false,
   "engines": {

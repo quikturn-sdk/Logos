@@ -7,9 +7,9 @@
  *
  * Usage:
  * ```ts
- * import { QuikTurnLogos } from "@quikturn/logos/client";
+ * import { QuikturnLogos } from "@quikturn/logos/client";
  *
- * const client = new QuikTurnLogos({ token: "qt_your_key" });
+ * const client = new QuikturnLogos({ token: "qt_your_key" });
  * const { url, blob, metadata } = await client.get("github.com", { size: 256 });
  * document.querySelector("img").src = url;
  *
@@ -50,7 +50,7 @@ export interface BrowserClientOptions {
 }
 
 /**
- * Options accepted by {@link QuikTurnLogos.get}.
+ * Options accepted by {@link QuikturnLogos.get}.
  *
  * - `size`            — Output width in pixels.
  * - `width`           — Alias for `size`.
@@ -85,7 +85,7 @@ export type EventHandler = (remaining: number, limit: number) => void;
 // ---------------------------------------------------------------------------
 
 /**
- * Browser client for the QuikTurn Logos API.
+ * Browser client for the Quikturn Logos API.
  *
  * Manages the full lifecycle of logo requests including URL construction,
  * network fetching with retries, scrape polling, response parsing, and
@@ -94,7 +94,7 @@ export type EventHandler = (remaining: number, limit: number) => void;
  * The client tracks all created `blob:` object URLs and revokes them on
  * {@link destroy}, preventing memory leaks in long-lived browser sessions.
  */
-export class QuikTurnLogos {
+export class QuikturnLogos {
   private readonly token: string;
   private readonly baseUrl?: string;
   private readonly maxRetries: number;

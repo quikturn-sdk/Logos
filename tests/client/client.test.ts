@@ -40,7 +40,7 @@ import { logoUrl } from "../../src/url-builder";
 import { parseLogoHeaders } from "../../src/headers";
 
 // Import the class under test (after mocks are declared)
-import { QuikTurnLogos } from "../../src/client/index";
+import { QuikturnLogos } from "../../src/client/index";
 import { AuthenticationError } from "../../src/errors";
 
 // ---------------------------------------------------------------------------
@@ -82,7 +82,7 @@ function mockResponse(
 // Test Suite
 // ---------------------------------------------------------------------------
 
-describe("QuikTurnLogos", () => {
+describe("QuikturnLogos", () => {
   // Track created object URLs so we can verify cleanup
   let createdUrls: string[];
   let revokedUrls: string[];
@@ -134,27 +134,27 @@ describe("QuikTurnLogos", () => {
   // -----------------------------------------------------------------------
 
   it("T4.36 - Constructor requires token option", () => {
-    expect(() => new QuikTurnLogos({ token: "" })).toThrow(AuthenticationError);
-    expect(() => new QuikTurnLogos({ token: "" })).toThrow("Token is required");
+    expect(() => new QuikturnLogos({ token: "" })).toThrow(AuthenticationError);
+    expect(() => new QuikturnLogos({ token: "" })).toThrow("Token is required");
   });
 
   it("T4.37 - Constructor rejects sk_ prefixed tokens (server keys not allowed)", () => {
-    expect(() => new QuikTurnLogos({ token: "sk_test_abc123" })).toThrow(
+    expect(() => new QuikturnLogos({ token: "sk_test_abc123" })).toThrow(
       AuthenticationError,
     );
-    expect(() => new QuikTurnLogos({ token: "sk_test_abc123" })).toThrow(
+    expect(() => new QuikturnLogos({ token: "sk_test_abc123" })).toThrow(
       "Server keys (sk_) are not allowed in the browser client",
     );
   });
 
   it("T4.38 - Constructor accepts qt_ prefixed tokens", () => {
-    const client = new QuikTurnLogos({ token: "qt_test_abc123" });
-    expect(client).toBeInstanceOf(QuikTurnLogos);
+    const client = new QuikturnLogos({ token: "qt_test_abc123" });
+    expect(client).toBeInstanceOf(QuikturnLogos);
   });
 
   it("T4.39 - Constructor accepts pk_ prefixed tokens", () => {
-    const client = new QuikTurnLogos({ token: "pk_test_abc123" });
-    expect(client).toBeInstanceOf(QuikTurnLogos);
+    const client = new QuikturnLogos({ token: "pk_test_abc123" });
+    expect(client).toBeInstanceOf(QuikturnLogos);
   });
 
   // -----------------------------------------------------------------------
@@ -162,7 +162,7 @@ describe("QuikTurnLogos", () => {
   // -----------------------------------------------------------------------
 
   it("T4.40 - get('google.com') returns BrowserLogoResponse with url (blob:), blob, contentType, metadata", async () => {
-    const client = new QuikTurnLogos({ token: "qt_test_123" });
+    const client = new QuikturnLogos({ token: "qt_test_123" });
     const result = await client.get("google.com");
 
     expect(result.url).toMatch(/^blob:/);
@@ -172,7 +172,7 @@ describe("QuikTurnLogos", () => {
   });
 
   it("T4.41 - get() includes token in URL query parameter", async () => {
-    const client = new QuikTurnLogos({ token: "qt_my_token" });
+    const client = new QuikturnLogos({ token: "qt_my_token" });
     await client.get("google.com");
 
     // Verify logoUrl was called with the token
@@ -187,7 +187,7 @@ describe("QuikTurnLogos", () => {
   // -----------------------------------------------------------------------
 
   it("T4.42 - get() with size option passes through correctly", async () => {
-    const client = new QuikTurnLogos({ token: "qt_test_123" });
+    const client = new QuikturnLogos({ token: "qt_test_123" });
     await client.get("github.com", { size: 256 });
 
     expect(logoUrl).toHaveBeenCalledWith(
@@ -197,7 +197,7 @@ describe("QuikTurnLogos", () => {
   });
 
   it("T4.43 - get() with all options (size, greyscale, theme, format) passes through", async () => {
-    const client = new QuikTurnLogos({ token: "qt_test_123" });
+    const client = new QuikturnLogos({ token: "qt_test_123" });
     await client.get("example.com", {
       size: 512,
       greyscale: true,
@@ -224,7 +224,7 @@ describe("QuikTurnLogos", () => {
     const scrapeResponse = mockResponse(200, { "Content-Type": "image/png" });
     vi.mocked(handleScrapeResponse).mockResolvedValueOnce(scrapeResponse);
 
-    const client = new QuikTurnLogos({ token: "qt_test_123" });
+    const client = new QuikturnLogos({ token: "qt_test_123" });
     await client.get("newsite.com", { autoScrape: true });
 
     // handleScrapeResponse should have been called
@@ -242,7 +242,7 @@ describe("QuikTurnLogos", () => {
 
   it("T4.45 - get() with onScrapeProgress callback passes through to poller", async () => {
     const onScrapeProgress = vi.fn();
-    const client = new QuikTurnLogos({ token: "qt_test_123" });
+    const client = new QuikturnLogos({ token: "qt_test_123" });
 
     await client.get("newsite.com", {
       autoScrape: true,
@@ -260,7 +260,7 @@ describe("QuikTurnLogos", () => {
   });
 
   it("T4.46 - get() with scrapeTimeout passes through to poller", async () => {
-    const client = new QuikTurnLogos({ token: "qt_test_123" });
+    const client = new QuikturnLogos({ token: "qt_test_123" });
 
     await client.get("newsite.com", {
       autoScrape: true,
@@ -283,7 +283,7 @@ describe("QuikTurnLogos", () => {
 
   it("T4.47 - get() with abort signal propagates to fetcher", async () => {
     const controller = new AbortController();
-    const client = new QuikTurnLogos({ token: "qt_test_123" });
+    const client = new QuikturnLogos({ token: "qt_test_123" });
 
     await client.get("google.com", { signal: controller.signal });
 
@@ -310,7 +310,7 @@ describe("QuikTurnLogos", () => {
     );
 
     const handler = vi.fn();
-    const client = new QuikTurnLogos({ token: "qt_test_123" });
+    const client = new QuikturnLogos({ token: "qt_test_123" });
     client.on("rateLimitWarning", handler);
 
     await client.get("google.com");
@@ -330,7 +330,7 @@ describe("QuikTurnLogos", () => {
     );
 
     const handler = vi.fn();
-    const client = new QuikTurnLogos({ token: "qt_test_123" });
+    const client = new QuikturnLogos({ token: "qt_test_123" });
     client.on("quotaWarning", handler);
 
     await client.get("google.com");
@@ -348,7 +348,7 @@ describe("QuikTurnLogos", () => {
     );
 
     const handler = vi.fn();
-    const client = new QuikTurnLogos({ token: "qt_test_123" });
+    const client = new QuikturnLogos({ token: "qt_test_123" });
     client.on("rateLimitWarning", handler);
 
     // First call: handler should fire
@@ -376,7 +376,7 @@ describe("QuikTurnLogos", () => {
     );
 
     const handler = vi.fn();
-    const client = new QuikTurnLogos({ token: "qt_test_123" });
+    const client = new QuikturnLogos({ token: "qt_test_123" });
     client.on("rateLimitWarning", handler);
 
     // Create two object URLs via get()
@@ -410,7 +410,7 @@ describe("QuikTurnLogos", () => {
   // -----------------------------------------------------------------------
 
   it("T4.52 - getUrl() returns plain URL string (delegates to logoUrl())", () => {
-    const client = new QuikTurnLogos({ token: "qt_test_123" });
+    const client = new QuikturnLogos({ token: "qt_test_123" });
     const result = client.getUrl("google.com");
 
     expect(logoUrl).toHaveBeenCalledWith(
@@ -426,7 +426,7 @@ describe("QuikTurnLogos", () => {
   // -----------------------------------------------------------------------
 
   it("T4.53 - Custom baseUrl option propagates to URL builder", async () => {
-    const client = new QuikTurnLogos({
+    const client = new QuikturnLogos({
       token: "qt_test_123",
       baseUrl: "https://custom-api.example.com",
     });
@@ -446,7 +446,7 @@ describe("QuikTurnLogos", () => {
   // -----------------------------------------------------------------------
 
   it("T4.54 - Multiple concurrent get() calls work correctly", async () => {
-    const client = new QuikTurnLogos({ token: "qt_test_123" });
+    const client = new QuikturnLogos({ token: "qt_test_123" });
 
     const [result1, result2, result3] = await Promise.all([
       client.get("google.com"),

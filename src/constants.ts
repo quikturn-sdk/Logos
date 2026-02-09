@@ -4,7 +4,7 @@ import type { Tier, KeyType, SupportedOutputFormat, FormatShorthand } from "./ty
 // Base URL
 // ---------------------------------------------------------------------------
 
-/** Root endpoint for the QuikTurn Logos API. */
+/** Root endpoint for the Quikturn Logos API. */
 export const BASE_URL = "https://logos.getquikturn.io" as const;
 
 // ---------------------------------------------------------------------------
