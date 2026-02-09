@@ -43,6 +43,7 @@
     "prepublishOnly": "pnpm run typecheck && pnpm run test && pnpm run build"
   },
   "devDependencies": {
+    "@types/node": "^25.2.2",
     "@vitest/coverage-v8": "^4.0.18",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
