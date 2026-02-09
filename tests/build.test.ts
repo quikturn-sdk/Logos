@@ -233,14 +233,16 @@ describe("Phase 6: Build & Packaging", () => {
     it("T6.ESM.2 - ESM import from client entry exports QuikturnLogos", async () => {
       const mod = await import(resolve(DIST, "client/index.mjs"));
       expect(typeof mod.QuikturnLogos).toBe("function");
-      expect(typeof mod.browserFetch).toBe("function");
+      // Internal modules (browserFetch, handleScrapeResponse) should NOT be re-exported
+      expect(mod.browserFetch).toBeUndefined();
     });
 
     it("T6.CJS.2 - CJS require from server entry exports QuikturnLogos", () => {
       const req = createRequire(import.meta.url);
       const mod = req(resolve(DIST, "server/index.cjs"));
       expect(typeof mod.QuikturnLogos).toBe("function");
-      expect(typeof mod.serverFetch).toBe("function");
+      // Internal modules (serverFetch, getMany raw fn) should NOT be re-exported
+      expect(mod.serverFetch).toBeUndefined();
     });
   });
 });

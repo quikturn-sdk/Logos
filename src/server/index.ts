@@ -370,8 +370,5 @@ export class QuikturnLogos {
   }
 }
 
-// Re-export lower-level modules for consumers who need direct access
-export { serverFetch } from "./fetcher";
-export type { ServerFetcherOptions } from "./fetcher";
-export { getMany } from "./batch";
+// Re-export types needed by consumers of the class API
 export type { BatchOptions, BatchResult } from "./batch";

@@ -280,9 +280,3 @@ export class QuikturnLogos {
   }
 }
 
-// Re-export lower-level modules for consumers who need direct access
-export { browserFetch } from "./fetcher";
-export type { FetcherOptions } from "./fetcher";
-export { handleScrapeResponse } from "./scrape-poller";
-export type { ScrapePollerOptions } from "./scrape-poller";
-export { parseAttributionStatus } from "./attribution";
