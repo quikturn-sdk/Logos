@@ -1,6 +1,6 @@
 {
   "name": "@quikturn/logos",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Quikturn Logo SDK — URL builder, browser client, and server client for the Quikturn Logos API",
   "license": "MIT",
   "author": "Quikturn",
