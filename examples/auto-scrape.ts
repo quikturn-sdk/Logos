@@ -1,13 +1,13 @@
 /**
- * Example: Auto-scrape Flow with Progress UI
+ * Example: Scrape Flow with Progress UI
  *
- * When a logo is not in the Quikturn database, the auto-scrape feature
+ * When a logo is not in the Quikturn database, the SDK automatically
  * triggers a background scrape job and polls for completion. This example
  * shows how to wire up progress reporting and cancellation using the
  * browser client.
  *
  * Key concepts:
- * - `autoScrape: true` opts in to background scraping on 404
+ * - Scraping is always enabled — no opt-in flag needed
  * - `onScrapeProgress` receives ScrapeProgressEvent updates during polling
  * - `scrapeTimeout` caps the maximum wait time (ms)
  * - `signal` via AbortController enables user-initiated cancellation
@@ -38,11 +38,11 @@ client.on("quotaWarning", (remaining: number, limit: number) => {
 });
 
 // ---------------------------------------------------------------------------
-// Auto-scrape Helper
+// Scrape Helper
 // ---------------------------------------------------------------------------
 
 /**
- * Fetches a logo with auto-scrape enabled. If the logo is not already
+ * Fetches a logo with scrape polling. If the logo is not already
  * cached, the API starts a background scrape and the SDK polls until
  * completion or timeout.
  *
@@ -62,7 +62,6 @@ async function fetchLogoWithScrape(
 
   try {
     const result = await client.get(domain, {
-      autoScrape: true,
       scrapeTimeout: 45_000, // max 45s for the scrape job
       signal: controller.signal,
 

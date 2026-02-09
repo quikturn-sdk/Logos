@@ -64,7 +64,6 @@ export interface ServerClientOptions {
  * - `greyscale`       — When true, returns a greyscale image.
  * - `theme`           — "light" or "dark" gamma adjustment.
  * - `format`          — Output image format (MIME type or shorthand).
- * - `autoScrape`      — When true, triggers background scrape if logo is not found.
  * - `scrapeTimeout`   — Maximum time (ms) to wait for a scrape to complete.
  * - `onScrapeProgress`— Callback fired on each scrape poll.
  * - `signal`          — AbortSignal to cancel the request.
@@ -75,7 +74,6 @@ export interface ServerGetOptions {
   greyscale?: boolean;
   theme?: ThemeOption;
   format?: SupportedOutputFormat | FormatShorthand;
-  autoScrape?: boolean;
   scrapeTimeout?: number;
   onScrapeProgress?: (event: ScrapeProgressEvent) => void;
   signal?: AbortSignal;
@@ -148,7 +146,6 @@ export class QuikturnLogos {
       greyscale: options?.greyscale,
       theme: options?.theme,
       format: options?.format,
-      autoScrape: options?.autoScrape,
       baseUrl: this.baseUrl,
     });
 
@@ -172,28 +169,24 @@ export class QuikturnLogos {
         this.emit("quotaWarning", remaining, limit),
     });
 
-    // 4. Handle 202 scrape responses when autoScrape is enabled
-    if (options?.autoScrape) {
-      // The scrape poller expects fetchFn typed as `typeof browserFetch`.
-      // Wrap serverFetch to match the expected (url: string) => Promise<Response> shape.
-      const fetchForPoller = (fetchUrl: string) =>
-        serverFetch(fetchUrl, {
-          token: this.secretKey,
-          maxRetries: this.maxRetries,
-          signal: options?.signal,
-        });
+    // 4. Handle 202 scrape responses (always enabled)
+    const fetchForPoller = (fetchUrl: string) =>
+      serverFetch(fetchUrl, {
+        token: this.secretKey,
+        maxRetries: this.maxRetries,
+        signal: options?.signal,
+      });
 
-      response = await handleScrapeResponse(
-        response,
-        url,
-        fetchForPoller,
-        {
-          scrapeTimeout: options?.scrapeTimeout,
-          onScrapeProgress: options?.onScrapeProgress,
-          signal: options?.signal,
-        },
-      );
-    }
+    response = await handleScrapeResponse(
+      response,
+      url,
+      fetchForPoller,
+      {
+        scrapeTimeout: options?.scrapeTimeout,
+        onScrapeProgress: options?.onScrapeProgress,
+        signal: options?.signal,
+      },
+    );
 
     // 5. Check response body size before consuming
     const contentLength = response.headers.get("Content-Length");
@@ -289,7 +282,6 @@ export class QuikturnLogos {
       greyscale: options?.greyscale,
       theme: options?.theme,
       format: options?.format,
-      autoScrape: options?.autoScrape,
       baseUrl: this.baseUrl,
     });
 
@@ -328,7 +320,7 @@ export class QuikturnLogos {
     domain: string,
     options?: Omit<
       ServerGetOptions,
-      "autoScrape" | "scrapeTimeout" | "onScrapeProgress" | "signal"
+      "scrapeTimeout" | "onScrapeProgress" | "signal"
     >,
   ): string {
     return logoUrl(domain, {
@@ -378,8 +370,5 @@ export class QuikturnLogos {
   }
 }
 
-// Re-export lower-level modules for consumers who need direct access
-export { serverFetch } from "./fetcher";
-export type { ServerFetcherOptions } from "./fetcher";
-export { getMany } from "./batch";
+// Re-export types needed by consumers of the class API
 export type { BatchOptions, BatchResult } from "./batch";

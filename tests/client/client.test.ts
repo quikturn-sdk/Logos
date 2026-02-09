@@ -235,19 +235,18 @@ describe("QuikturnLogos", () => {
   });
 
   // -----------------------------------------------------------------------
-  // get() with auto-scrape (T4.44 - T4.46)
+  // get() scrape handling (T4.44 - T4.46) — always enabled
   // -----------------------------------------------------------------------
 
-  it("T4.44 - get() with autoScrape: true delegates to scrape poller", async () => {
+  it("T4.44 - get() always delegates to scrape poller", async () => {
     const scrapeResponse = mockResponse(200, { "Content-Type": "image/png" });
     vi.mocked(handleScrapeResponse).mockResolvedValueOnce(scrapeResponse);
 
     const client = new QuikturnLogos({ token: "qt_test_123" });
-    await client.get("newsite.com", { autoScrape: true });
+    await client.get("newsite.com");
 
-    // handleScrapeResponse should have been called
+    // handleScrapeResponse should always be called
     expect(handleScrapeResponse).toHaveBeenCalledOnce();
-    // Verify the original response and fetch function are passed
     expect(handleScrapeResponse).toHaveBeenCalledWith(
       expect.anything(), // original response
       expect.any(String), // original URL
@@ -263,7 +262,6 @@ describe("QuikturnLogos", () => {
     const client = new QuikturnLogos({ token: "qt_test_123" });
 
     await client.get("newsite.com", {
-      autoScrape: true,
       onScrapeProgress,
     });
 
@@ -281,7 +279,6 @@ describe("QuikturnLogos", () => {
     const client = new QuikturnLogos({ token: "qt_test_123" });
 
     await client.get("newsite.com", {
-      autoScrape: true,
       scrapeTimeout: 15_000,
     });
 

@@ -5,7 +5,7 @@
 ## Features
 
 - **Zero-dependency URL builder** -- universal, works in any JavaScript runtime
-- **Browser client** -- blob URL management, retry/backoff, auto-scrape polling, event emission
+- **Browser client** -- blob URL management, retry/backoff, scrape polling, event emission
 - **Server client** -- Buffer output, ReadableStream streaming, concurrent batch operations
 - **Full TypeScript support** -- strict types, discriminated union error codes, generic response shapes
 - **Tree-shakeable** -- ESM and CJS dual builds; import only what you need
@@ -107,7 +107,7 @@ Readable.fromWeb(stream).pipe(createWriteStream("logo.png"));
 
 ### Universal (`@quikturn/logos`)
 
-The universal entry point exports the URL builder, types, constants, error classes, and header parser. No network calls are made from this module.
+The universal entry point exports the URL builder, types, constants, and error classes. No network calls are made from this module.
 
 #### `logoUrl(domain, options?)`
 
@@ -127,24 +127,17 @@ Constructs a fully-qualified Logos API URL. Pure function with no side effects.
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
 | `token` | `string` | -- | Publishable key (`qt_`/`pk_`) appended as a query parameter |
-| `size` | `number` | `128` | Output width in pixels, clamped to `1..800` (publishable) or `1..1200` (secret) |
+| `size` | `number` | `128` | Output width in pixels |
 | `width` | `number` | `128` | Alias for `size` |
 | `greyscale` | `boolean` | `false` | When `true`, applies saturation: 0 transformation |
-| `theme` | `"light" \| "dark"` | -- | Gamma curve adjustment (`"light"` = 0.9, `"dark"` = 1.12) |
+| `theme` | `"light" \| "dark"` | -- | Optimize logo for light or dark backgrounds |
 | `format` | `SupportedOutputFormat \| FormatShorthand` | `"image/png"` | Output image format |
-| `autoScrape` | `boolean` | `false` | Trigger background scrape if logo is not found |
 | `baseUrl` | `string` | `"https://logos.getquikturn.io"` | Override the API base URL |
 
 #### Types
 
 ```ts
 import type {
-  // Key & Auth
-  KeyType,           // "publishable" | "secret"
-  KeyPrefix,         // "qt_" | "pk_" | "sk_"
-  Tier,              // "free" | "launch" | "growth" | "enterprise"
-  TokenStatus,       // "active" | "suspended" | "revoked"
-
   // Request
   ThemeOption,           // "light" | "dark"
   SupportedOutputFormat, // "image/png" | "image/jpeg" | "image/webp" | "image/avif"
@@ -156,15 +149,8 @@ import type {
   BrowserLogoResponse,
   ServerLogoResponse,
 
-  // Auto-scrape
-  ScrapeJob,
-  ScrapePendingResponse,
-  ScrapeJobStatus,       // "pending" | "complete" | "failed"
+  // Scrape polling
   ScrapeProgressEvent,
-
-  // Attribution (free tier)
-  AttributionStatus,
-  AttributionInfo,
 
   // Error codes
   LogoErrorCode,
@@ -177,24 +163,9 @@ import type {
 |----------|-------|-------------|
 | `BASE_URL` | `"https://logos.getquikturn.io"` | Root API endpoint |
 | `DEFAULT_WIDTH` | `128` | Default logo width (px) |
-| `MAX_WIDTH` | `800` | Max width for publishable keys |
-| `MAX_WIDTH_SERVER` | `1200` | Max width for secret keys |
 | `DEFAULT_FORMAT` | `"image/png"` | Default output MIME type |
 | `SUPPORTED_FORMATS` | `Set<SupportedOutputFormat>` | All supported MIME types |
 | `FORMAT_ALIASES` | `Record<FormatShorthand, SupportedOutputFormat>` | Shorthand-to-MIME mapping |
-| `RATE_LIMITS` | `Record<Tier, { requests, windowSeconds }>` | Per-tier publishable rate limits |
-| `SERVER_RATE_LIMITS` | `Record<Tier, { requests, windowSeconds }>` | Per-tier server rate limits |
-| `MONTHLY_LIMITS` | `Record<Tier, number>` | Monthly request quotas |
-| `TIERS` | `readonly Tier[]` | All tiers as a runtime array |
-| `KEY_TYPES` | `readonly KeyType[]` | All key types as a runtime array |
-
-#### `parseLogoHeaders(headers)`
-
-Parses a `Headers` object from a fetch `Response` into a structured `LogoMetadata` object.
-
-#### `parseRetryAfter(headers)`
-
-Extracts the `Retry-After` header value in seconds. Returns `number | null`.
 
 ---
 
@@ -219,7 +190,6 @@ Fetches a logo and returns a `BrowserLogoResponse`.
 | `greyscale` | `boolean` | `false` | Greyscale transformation |
 | `theme` | `"light" \| "dark"` | -- | Gamma curve adjustment |
 | `format` | `SupportedOutputFormat \| FormatShorthand` | `"image/png"` | Output format |
-| `autoScrape` | `boolean` | `false` | Enable auto-scrape polling |
 | `scrapeTimeout` | `number` | -- | Max time (ms) to wait for scrape completion |
 | `onScrapeProgress` | `(event: ScrapeProgressEvent) => void` | -- | Callback for scrape progress |
 | `signal` | `AbortSignal` | -- | Cancel the request |
@@ -319,7 +289,7 @@ Accepts the same options as `get()`.
 
 #### `client.getUrl(domain, options?)`
 
-Returns a plain URL string with the secret key included as a token query parameter.
+Returns a plain URL string without making a network request. Does **not** include the secret key -- use the `Authorization: Bearer` header when fetching.
 
 **Returns:** `string`
 
@@ -438,60 +408,14 @@ client.get("github.com", { format: "webp" });
 
 ### Theme Options
 
-| Theme | Gamma | Use Case |
-|-------|-------|----------|
-| `"light"` | 0.9 | Light backgrounds |
-| `"dark"` | 1.12 | Dark backgrounds |
-
-## Auto-Scrape
-
-When a logo is not found in the database, the SDK can automatically trigger a background scrape and poll for completion.
-
-**Flow:** Request with `autoScrape: true` --> API returns `202 Accepted` with a scrape job --> SDK polls the job URL --> Logo becomes available --> SDK returns the final image.
-
-```ts
-const { url } = await client.get("brand-new-startup.com", {
-  autoScrape: true,
-  scrapeTimeout: 30_000, // wait up to 30 seconds
-  onScrapeProgress: (event) => {
-    console.log(`Scrape status: ${event.status}, progress: ${event.progress}%`);
-  },
-});
-```
-
-If the scrape does not complete within `scrapeTimeout`, a `ScrapeTimeoutError` is thrown.
+| Theme | Use Case |
+|-------|----------|
+| `"light"` | Optimized for light backgrounds |
+| `"dark"` | Optimized for dark backgrounds |
 
 ## Rate Limits & Quotas
 
-### Per-Minute Rate Limits (Publishable Keys)
-
-| Tier | Requests/min | Window |
-|------|-------------|--------|
-| Free | 100 | 60s |
-| Launch | 500 | 60s |
-| Growth | 5,000 | 60s |
-| Enterprise | 50,000 | 60s |
-
-### Per-Minute Rate Limits (Secret Keys)
-
-| Tier | Requests/min | Window |
-|------|-------------|--------|
-| Launch | 1,000 | 60s |
-| Growth | 10,000 | 60s |
-| Enterprise | 100,000 | 60s |
-
-> The free tier does not have server-side (secret key) access.
-
-### Monthly Quotas
-
-| Tier | Monthly Limit |
-|------|--------------|
-| Free | 500,000 |
-| Launch | 1,000,000 |
-| Growth | 5,000,000 |
-| Enterprise | 10,000,000 |
-
-Rate limits are enforced by the API server. The SDK reads `X-RateLimit-Remaining`, `X-Quota-Remaining`, and `Retry-After` headers to provide warnings via the event system and automatic retry with backoff.
+Rate limits and monthly quotas are enforced by the API server and vary by plan. The SDK automatically reads rate-limit headers to provide warnings via the event system and retries with backoff when limits are hit. See [Quikturn pricing](https://getquikturn.io/pricing) for details on your plan's limits.
 
 ## License
 
