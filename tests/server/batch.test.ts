@@ -229,6 +229,28 @@ describe("getMany", () => {
   });
 
   // -----------------------------------------------------------------------
+  // TR.3 - processDomain stops retrying after MAX_RATE_LIMIT_RETRIES
+  // -----------------------------------------------------------------------
+
+  it("TR.3 - processDomain stops retrying after MAX_RATE_LIMIT_RETRIES rate limit errors", async () => {
+    vi.useFakeTimers();
+    const fetchFn = vi.fn(async () => {
+      throw new RateLimitError("Rate limit exceeded", 1, 0, new Date("2026-01-01T00:01:00Z"));
+    });
+    const gen = getMany(["a.com"], fetchFn, { concurrency: 1 });
+    const resultsPromise = collectResults(gen);
+    // Advance timers enough for all retries (each waits 1000ms)
+    await vi.advanceTimersByTimeAsync(10_000);
+    const results = await resultsPromise;
+    expect(results).toHaveLength(1);
+    expect(results[0]!.success).toBe(false);
+    expect(results[0]!.error).toBeInstanceOf(RateLimitError);
+    // Should have been called 4 times: initial + 3 retries
+    expect(fetchFn).toHaveBeenCalledTimes(4);
+    vi.useRealTimers();
+  });
+
+  // -----------------------------------------------------------------------
   // T5.17 - AbortSignal cancels remaining batch items
   // -----------------------------------------------------------------------
 

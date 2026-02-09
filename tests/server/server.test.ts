@@ -138,19 +138,38 @@ describe("QuikturnLogos (server)", () => {
       AuthenticationError,
     );
     expect(() => new QuikturnLogos({ secretKey: "qt_test" })).toThrow(
-      "Publishable keys (qt_/pk_) are not allowed in the server client",
+      "Server client requires a secret key (sk_ prefix)",
     );
     expect(() => new QuikturnLogos({ secretKey: "pk_test" })).toThrow(
       AuthenticationError,
     );
     expect(() => new QuikturnLogos({ secretKey: "pk_test" })).toThrow(
-      "Publishable keys (qt_/pk_) are not allowed in the server client",
+      "Server client requires a secret key (sk_ prefix)",
     );
   });
 
   it("T5.23 - Constructor accepts sk_ prefixed tokens", () => {
     const client = new QuikturnLogos({ secretKey: "sk_test_abc" });
     expect(client).toBeInstanceOf(QuikturnLogos);
+  });
+
+  it("T5.23b - Constructor rejects keys without sk_ prefix", () => {
+    expect(() => new QuikturnLogos({ secretKey: "random_key_123" })).toThrow(AuthenticationError);
+    expect(() => new QuikturnLogos({ secretKey: "random_key_123" })).toThrow("Server client requires a secret key (sk_ prefix)");
+    expect(() => new QuikturnLogos({ secretKey: "mytoken" })).toThrow(AuthenticationError);
+  });
+
+  // -----------------------------------------------------------------------
+  // TR.2 - get() rejects responses larger than MAX_RESPONSE_BODY_BYTES
+  // -----------------------------------------------------------------------
+
+  it("TR.2 - get() rejects responses larger than MAX_RESPONSE_BODY_BYTES", async () => {
+    // Mock a response with Content-Length exceeding the limit
+    vi.mocked(serverFetch).mockResolvedValue(
+      mockResponse(200, { "Content-Type": "image/png", "Content-Length": "11000000" }),
+    );
+    const client = new QuikturnLogos({ secretKey: "sk_test_123" });
+    await expect(client.get("huge-logo.com")).rejects.toThrow("exceeds maximum");
   });
 
   // -----------------------------------------------------------------------
@@ -310,17 +329,28 @@ describe("QuikturnLogos (server)", () => {
   // getUrl() (T5.32)
   // -----------------------------------------------------------------------
 
-  it("T5.32 - getUrl() returns URL string with token in query (for convenience)", () => {
+  it("T5.32 - getUrl() returns URL string without token (security: sk_ keys must not appear in URLs)", () => {
     const client = new QuikturnLogos({ secretKey: "sk_test_123" });
     const result = client.getUrl("google.com");
 
-    // Verify logoUrl was called WITH the token for convenience URL
+    // Verify logoUrl was called WITHOUT token (security: sk_ keys must never appear in URLs)
     expect(logoUrl).toHaveBeenCalledWith(
       "google.com",
-      expect.objectContaining({ token: "sk_test_123" }),
+      expect.not.objectContaining({ token: expect.anything() }),
     );
     expect(typeof result).toBe("string");
     expect(result).toContain("google.com");
+  });
+
+  it("T5.32b - getUrl() does NOT include secret key in URL query params", () => {
+    const client = new QuikturnLogos({ secretKey: "sk_test_123" });
+    client.getUrl("google.com");
+
+    // Verify logoUrl was called WITHOUT token (security: sk_ keys must never appear in URLs)
+    expect(logoUrl).toHaveBeenCalledWith(
+      "google.com",
+      expect.not.objectContaining({ token: expect.anything() }),
+    );
   });
 
   // -----------------------------------------------------------------------

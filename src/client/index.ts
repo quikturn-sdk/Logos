@@ -30,7 +30,8 @@ import { logoUrl } from "../url-builder";
 import { parseLogoHeaders } from "../headers";
 import { browserFetch } from "./fetcher";
 import { handleScrapeResponse } from "./scrape-poller";
-import { AuthenticationError } from "../errors";
+import { AuthenticationError, LogoError } from "../errors";
+import { MAX_RESPONSE_BODY_BYTES } from "../constants";
 
 // ---------------------------------------------------------------------------
 // Public Types
@@ -176,7 +177,19 @@ export class QuikturnLogos {
       });
     }
 
-    // 5. Parse the response into a BrowserLogoResponse
+    // 5. Check response body size before consuming
+    const contentLength = response.headers.get("Content-Length");
+    if (contentLength) {
+      const size = parseInt(contentLength, 10);
+      if (!Number.isNaN(size) && size > MAX_RESPONSE_BODY_BYTES) {
+        throw new LogoError(
+          `Response body (${size} bytes) exceeds maximum allowed size`,
+          "UNEXPECTED_ERROR",
+        );
+      }
+    }
+
+    // 6. Parse the response into a BrowserLogoResponse
     const blob = await response.blob();
     const contentType = response.headers.get("Content-Type") || "image/png";
     const metadata: LogoMetadata = parseLogoHeaders(response.headers);

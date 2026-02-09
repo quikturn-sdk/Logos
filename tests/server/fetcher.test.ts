@@ -238,6 +238,23 @@ describe("serverFetch", () => {
   });
 
   // -----------------------------------------------------------------------
+  // TR.1 - 429 with excessively large Retry-After is capped to 300 seconds
+  // -----------------------------------------------------------------------
+
+  it("TR.1 - 429 with excessively large Retry-After is capped to 300 seconds", async () => {
+    vi.useFakeTimers();
+    fetchSpy
+      .mockResolvedValueOnce(mockResponse(429, { "Retry-After": "999999", "X-RateLimit-Remaining": "0", "X-RateLimit-Reset": "1700000060" }))
+      .mockResolvedValueOnce(mockResponse(200));
+    const promise = serverFetch(TEST_URL, { token: TEST_TOKEN, maxRetries: 1 });
+    // Should wait max 300 seconds (300000ms), not 999999 seconds
+    await vi.advanceTimersByTimeAsync(300_000);
+    await promise;
+    expect(fetchSpy).toHaveBeenCalledTimes(2);
+    vi.useRealTimers();
+  });
+
+  // -----------------------------------------------------------------------
   // T5.10 - AbortSignal support
   // -----------------------------------------------------------------------
 

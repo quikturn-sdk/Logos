@@ -21,6 +21,7 @@ import {
 } from "../errors";
 import { parseRetryAfter } from "../headers";
 import { delay } from "../internal/delay";
+import { MAX_RETRY_AFTER_SECONDS } from "../constants";
 
 // ---------------------------------------------------------------------------
 // Public Types
@@ -241,7 +242,7 @@ export async function browserFetch(
       // Rate limit — retry if attempts remain
       if (retryCount < maxRetries) {
         retryCount++;
-        const retryDelay = Math.max(1, retryAfter) * 1000; // floor at 1 second
+        const retryDelay = Math.min(Math.max(1, retryAfter), MAX_RETRY_AFTER_SECONDS) * 1000; // floor at 1s, cap at 300s
         await delay(retryDelay);
         continue;
       }

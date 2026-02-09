@@ -189,6 +189,18 @@ describe("QuikturnLogos", () => {
   });
 
   // -----------------------------------------------------------------------
+  // TR.2b - get() rejects responses larger than MAX_RESPONSE_BODY_BYTES
+  // -----------------------------------------------------------------------
+
+  it("TR.2b - get() rejects responses larger than MAX_RESPONSE_BODY_BYTES", async () => {
+    vi.mocked(browserFetch).mockResolvedValue(
+      mockResponse(200, { "Content-Type": "image/png", "Content-Length": "11000000" }),
+    );
+    const client = new QuikturnLogos({ token: "qt_test_123" });
+    await expect(client.get("huge-logo.com")).rejects.toThrow("exceeds maximum");
+  });
+
+  // -----------------------------------------------------------------------
   // get() with options (T4.42 - T4.43)
   // -----------------------------------------------------------------------
 

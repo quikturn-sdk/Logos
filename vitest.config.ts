@@ -37,7 +37,7 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       include: ["src/**/*.ts"],
-      exclude: ["src/index.ts"],
+      exclude: ["src/index.ts"], // Only universal barrel; client/server index.ts have logic and must be covered
       thresholds: {
         branches: 90,
         lines: 95,

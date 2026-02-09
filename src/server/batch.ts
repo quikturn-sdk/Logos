@@ -14,6 +14,9 @@ import type { ThemeOption, SupportedOutputFormat, FormatShorthand, LogoMetadata 
 import { LogoError, RateLimitError } from "../errors";
 import { delay } from "../internal/delay";
 
+/** Maximum rate-limit retries per domain in batch operations. */
+const MAX_RATE_LIMIT_RETRIES = 3;
+
 // ---------------------------------------------------------------------------
 // Public Types
 // ---------------------------------------------------------------------------
@@ -143,6 +146,7 @@ export async function* getMany(
    * is true.
    */
   async function processDomain(index: number, domain: string): Promise<void> {
+    let rateLimitRetries = 0;
     // eslint-disable-next-line no-constant-condition
     while (true) {
       try {
@@ -157,8 +161,18 @@ export async function* getMany(
         markSettled(index);
         return;
       } catch (err: unknown) {
-        // Rate limit: pause and retry this domain
+        // Rate limit: pause and retry this domain (up to MAX_RATE_LIMIT_RETRIES)
         if (err instanceof RateLimitError) {
+          rateLimitRetries++;
+          if (rateLimitRetries > MAX_RATE_LIMIT_RETRIES) {
+            // Exhausted rate limit retries -- treat as error
+            if (continueOnError) {
+              results[index] = { domain, success: false, error: err };
+              markSettled(index);
+              return;
+            }
+            throw err;
+          }
           const waitMs = Math.max(1, err.retryAfter) * 1000;
           await delay(waitMs, signal);
           continue; // retry after pause

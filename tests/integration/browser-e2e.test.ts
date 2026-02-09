@@ -5,6 +5,12 @@
  * These tests exercise the browser-side `browserFetch` function and `logoUrl`
  * builder against the live API to verify real-world behavior.
  *
+ * NOTE: These tests run in Node.js environment (not jsdom) because:
+ * 1. Node 18+ provides a native fetch API compatible with browser fetch
+ * 2. These are API contract tests, not browser-specific behavior tests
+ * 3. We test `browserFetch` directly (not the full QuikturnLogos class which
+ *    requires `URL.createObjectURL`, a browser-only API)
+ *
  * Skipped automatically when `QUIKTURN_PUBLISHABLE_KEY` is not set.
  *
  * Run with: pnpm test:integration
@@ -62,8 +68,9 @@ describe.skipIf(!hasKey)("Browser Client Integration (E2E)", () => {
   // -------------------------------------------------------------------------
 
   it("T7.2 - throws NotFoundError for an unknown/nonexistent domain", async () => {
+    // Use .invalid TLD per RFC 6761 — guaranteed to never resolve
     const url = logoUrl(
-      "this-domain-definitely-does-not-exist-quikturn-test.com",
+      "nonexistent-test.invalid",
       { token: PUBLISHABLE_KEY! },
     );
 

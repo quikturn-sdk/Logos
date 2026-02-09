@@ -36,7 +36,8 @@ import type { ServerFetcherOptions } from "./fetcher";
 import { getMany } from "./batch";
 import type { BatchOptions, BatchResult } from "./batch";
 import { handleScrapeResponse } from "../client/scrape-poller";
-import { AuthenticationError } from "../errors";
+import { AuthenticationError, LogoError } from "../errors";
+import { MAX_RESPONSE_BODY_BYTES } from "../constants";
 
 // ---------------------------------------------------------------------------
 // Public Types
@@ -108,9 +109,9 @@ export class QuikturnLogos {
     if (!key) {
       throw new AuthenticationError("Secret key is required");
     }
-    if (key.startsWith("qt_") || key.startsWith("pk_")) {
+    if (!key.startsWith("sk_")) {
       throw new AuthenticationError(
-        "Publishable keys (qt_/pk_) are not allowed in the server client",
+        "Server client requires a secret key (sk_ prefix)",
       );
     }
 
@@ -185,7 +186,7 @@ export class QuikturnLogos {
       response = await handleScrapeResponse(
         response,
         url,
-        fetchForPoller as any,
+        fetchForPoller,
         {
           scrapeTimeout: options?.scrapeTimeout,
           onScrapeProgress: options?.onScrapeProgress,
@@ -194,7 +195,19 @@ export class QuikturnLogos {
       );
     }
 
-    // 5. Parse response into ServerLogoResponse
+    // 5. Check response body size before consuming
+    const contentLength = response.headers.get("Content-Length");
+    if (contentLength) {
+      const size = parseInt(contentLength, 10);
+      if (!Number.isNaN(size) && size > MAX_RESPONSE_BODY_BYTES) {
+        throw new LogoError(
+          `Response body (${size} bytes) exceeds maximum allowed size`,
+          "UNEXPECTED_ERROR",
+        );
+      }
+    }
+
+    // 6. Parse response into ServerLogoResponse
     const arrayBuffer = await response.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     const contentType =
@@ -304,12 +317,12 @@ export class QuikturnLogos {
   /**
    * Returns a plain URL string for the given domain without making a network request.
    *
-   * For convenience, includes the token in the query parameter so the URL
-   * can be used directly (e.g., for image loading in templates).
+   * The URL does not include authentication — use Authorization: Bearer header
+   * when fetching. Secret keys (sk_) must never appear in URLs.
    *
    * @param domain  - The domain to build a URL for.
    * @param options - Optional request parameters (size, format, etc.).
-   * @returns A fully-qualified Logos API URL string with token.
+   * @returns A fully-qualified Logos API URL string (without token).
    */
   getUrl(
     domain: string,
@@ -319,7 +332,6 @@ export class QuikturnLogos {
     >,
   ): string {
     return logoUrl(domain, {
-      token: this.secretKey,
       size: options?.size,
       width: options?.width,
       greyscale: options?.greyscale,

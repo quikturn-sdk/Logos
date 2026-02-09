@@ -98,3 +98,13 @@ export const MONTHLY_LIMITS: Readonly<Record<Tier, number>> = {
   growth: 5_000_000,
   enterprise: 10_000_000,
 } as const;
+
+// ---------------------------------------------------------------------------
+// Safety Caps
+// ---------------------------------------------------------------------------
+
+/** Maximum Retry-After delay in seconds. Values above this are capped. */
+export const MAX_RETRY_AFTER_SECONDS = 300 as const;
+
+/** Maximum response body size in bytes (10 MB). Responses larger than this are rejected. */
+export const MAX_RESPONSE_BODY_BYTES = 10_485_760 as const; // 10 * 1024 * 1024 (10 MB)

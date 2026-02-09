@@ -273,6 +273,22 @@ describe("browserFetch", () => {
   });
 
   // -----------------------------------------------------------------------
+  // TR.1b - 429 with excessively large Retry-After is capped to 300 seconds
+  // -----------------------------------------------------------------------
+
+  it("TR.1b - 429 with excessively large Retry-After is capped to 300 seconds", async () => {
+    vi.useFakeTimers();
+    fetchSpy
+      .mockResolvedValueOnce(mockResponse(429, { "Retry-After": "999999", "X-RateLimit-Remaining": "0", "X-RateLimit-Reset": "1700000060" }))
+      .mockResolvedValueOnce(mockResponse(200));
+    const promise = browserFetch("https://logos.getquikturn.io/x", { maxRetries: 1 });
+    await vi.advanceTimersByTimeAsync(300_000);
+    await promise;
+    expect(fetchSpy).toHaveBeenCalledTimes(2);
+    vi.useRealTimers();
+  });
+
+  // -----------------------------------------------------------------------
   // AbortSignal: abort in-flight (T4.10)
   // -----------------------------------------------------------------------
 

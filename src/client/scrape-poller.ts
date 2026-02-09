@@ -13,7 +13,8 @@
 import type { ScrapePendingResponse, ScrapeProgressEvent } from "../types";
 import { LogoError, ScrapeTimeoutError } from "../errors";
 import { delay } from "../internal/delay";
-import type { browserFetch } from "./fetcher";
+/** A fetch function that takes a URL and returns a Response promise. */
+type FetchFn = (url: string) => Promise<Response>;
 
 // ---------------------------------------------------------------------------
 // Public Types
@@ -94,7 +95,7 @@ function appendToken(url: string, token: string): string {
 export async function handleScrapeResponse(
   response: Response,
   originalUrl: string,
-  fetchFn: typeof browserFetch,
+  fetchFn: FetchFn,
   options?: ScrapePollerOptions,
 ): Promise<Response> {
   // ---- Passthrough for non-202 responses ----
@@ -135,7 +136,7 @@ export async function handleScrapeResponse(
 
   // ---- Polling loop ----
   const MIN_BACKOFF_MS = 500;
-  let backoff = Math.max(MIN_BACKOFF_MS, estimatedWaitMs);
+  let backoff = Math.min(Math.max(MIN_BACKOFF_MS, estimatedWaitMs), MAX_BACKOFF_MS);
   const startTime = Date.now();
 
   // eslint-disable-next-line no-constant-condition

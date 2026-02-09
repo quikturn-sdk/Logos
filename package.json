@@ -15,17 +15,26 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": {
+        "import": "./dist/index.d.ts",
+        "require": "./dist/index.d.cts"
+      },
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     },
     "./client": {
-      "types": "./dist/client/index.d.ts",
+      "types": {
+        "import": "./dist/client/index.d.ts",
+        "require": "./dist/client/index.d.cts"
+      },
       "import": "./dist/client/index.mjs",
       "require": "./dist/client/index.cjs"
     },
     "./server": {
-      "types": "./dist/server/index.d.ts",
+      "types": {
+        "import": "./dist/server/index.d.ts",
+        "require": "./dist/server/index.d.cts"
+      },
       "import": "./dist/server/index.mjs",
       "require": "./dist/server/index.cjs"
     }

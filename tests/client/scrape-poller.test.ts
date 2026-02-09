@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { handleScrapeResponse } from "../../src/client/scrape-poller";
 import { LogoError, ScrapeTimeoutError } from "../../src/errors";
 import type { ScrapeProgressEvent, ScrapePendingResponse } from "../../src/types";
-import type { browserFetch } from "../../src/client/fetcher";
+
 
 // ---------------------------------------------------------------------------
 // Phase 4B - Scrape Poller (TDD)
@@ -60,10 +60,10 @@ function mockPollResponse(event: ScrapeProgressEvent): Response {
 }
 
 describe("handleScrapeResponse", () => {
-  let fetchFn: ReturnType<typeof vi.fn<typeof browserFetch>>;
+  let fetchFn: ReturnType<typeof vi.fn<(url: string) => Promise<Response>>>;
 
   beforeEach(() => {
-    fetchFn = vi.fn<typeof browserFetch>();
+    fetchFn = vi.fn<(url: string) => Promise<Response>>();
   });
 
   afterEach(() => {
@@ -519,6 +519,41 @@ describe("handleScrapeResponse", () => {
     expect(result).toBe(finalResponse);
     // 3 polls + 1 final fetch = 4 total calls
     expect(fetchFn).toHaveBeenCalledTimes(4);
+  });
+
+  // -----------------------------------------------------------------------
+  // TR.4 - estimatedWaitMs larger than MAX_BACKOFF_MS is capped to 5000ms
+  // -----------------------------------------------------------------------
+
+  it("TR.4 - estimatedWaitMs larger than MAX_BACKOFF_MS is capped to 5000ms", async () => {
+    vi.useFakeTimers();
+    const response202 = mock202Response({
+      scrapeJob: {
+        jobId: "job-huge",
+        pollUrl: "https://logos.getquikturn.io/scrape/status/job-huge",
+        estimatedWaitMs: 60000, // 60 seconds -- way too long
+      },
+    });
+    const completePoll = mockPollResponse({
+      status: "complete",
+      progress: 100,
+      logo: { id: 1, url: "https://cdn.example.com/logo.png", companyId: 42, companyName: "Example Inc" },
+    });
+    const finalResponse = mockResponse(200, { "Content-Type": "image/png" });
+    fetchFn
+      .mockResolvedValueOnce(completePoll)
+      .mockResolvedValueOnce(finalResponse);
+    const promise = handleScrapeResponse(
+      response202,
+      "https://logos.getquikturn.io/example.com",
+      fetchFn,
+      { scrapeTimeout: 60_000 },
+    );
+    // Should cap at 5000ms, not wait 60000ms
+    await vi.advanceTimersByTimeAsync(5000);
+    const result = await promise;
+    expect(result).toBe(finalResponse);
+    expect(fetchFn).toHaveBeenCalledTimes(2);
   });
 
   // -----------------------------------------------------------------------
