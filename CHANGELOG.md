@@ -1,3 +1,11 @@
+## [0.2.1](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/compare/v0.2.0...v0.2.1) (2026-02-09)
+
+
+### Bug Fixes
+
+* **client/server:** remove autoScrape option and enable scrape polling by default ([f8e9877](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/commit/f8e987753223f3987d3dacd1d4382b620fbd3276))
+* **index:** remove unnecessary re-exports and update documentation ([ef2010a](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/commit/ef2010ae6e99ee3bd27aa17ce8f3ef8a0d4be283))
+
 # [0.2.0](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/compare/v0.1.0...v0.2.0) (2026-02-09)
 
 
