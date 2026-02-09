@@ -46,6 +46,7 @@ export type FormatShorthand = "png" | "jpeg" | "webp" | "avif";
  * - `theme`      — "light" (gamma 0.9) or "dark" (gamma 1.12).
  * - `format`     — Output image format. Accepts full MIME type or shorthand. Default: "image/png".
  * - `autoScrape` — When true, triggers a background scrape if the logo is not found. Default: false.
+ * - `baseUrl`    — Override the default API base URL. Useful for testing or proxied environments.
  */
 export interface LogoRequestOptions {
   token?: string;
@@ -55,6 +56,7 @@ export interface LogoRequestOptions {
   theme?: ThemeOption;
   format?: SupportedOutputFormat | FormatShorthand;
   autoScrape?: boolean;
+  baseUrl?: string;
 }
 
 // ---------------------------------------------------------------------------

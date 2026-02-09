@@ -1,5 +1,5 @@
 // Universal entry point — @quikturn/logos
-// Re-exports types, constants, and URL builder
+// Re-exports types, constants, URL builder, and error classes
 
 // --- Types (compile-time only) ---
 export type {
@@ -37,3 +37,18 @@ export {
   TIERS,
   KEY_TYPES,
 } from "./constants";
+
+// --- URL Builder (runtime) ---
+export { logoUrl } from "./url-builder";
+
+// --- Error Classes (runtime) ---
+export {
+  LogoError,
+  DomainValidationError,
+  RateLimitError,
+  QuotaExceededError,
+  AuthenticationError,
+  ForbiddenError,
+  NotFoundError,
+  ScrapeTimeoutError,
+} from "./errors";
