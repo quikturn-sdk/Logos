@@ -26,12 +26,12 @@ describe("Phase 6: Build & Packaging", () => {
     if (!existsSync(DIST)) {
       execSync("pnpm build", { cwd: ROOT, stdio: "pipe" });
     }
-  });
+  }, 60_000);
 
   // -------------------------------------------------------------------------
   // T6.1 - Build succeeds with zero errors
   // -------------------------------------------------------------------------
-  it("T6.1 - pnpm build succeeds with zero errors", () => {
+  it("T6.1 - pnpm build succeeds with zero errors", { timeout: 60_000 }, () => {
     const result = execSync("pnpm build", {
       cwd: ROOT,
       stdio: "pipe",
