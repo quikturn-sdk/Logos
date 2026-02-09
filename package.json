@@ -1,0 +1,89 @@
+{
+  "name": "@quikturn/logos",
+  "version": "0.1.0",
+  "description": "Quikturn Logo SDK — URL builder, browser client, and server client for the Quikturn Logos API",
+  "license": "MIT",
+  "author": "Quikturn",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/issues"
+  },
+  "homepage": "https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK#readme",
+  "keywords": [
+    "quikturn",
+    "logo",
+    "logo-api",
+    "brand-assets",
+    "sdk"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "packageManager": "pnpm@10.28.1",
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "LICENSE",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": {
+        "import": "./dist/index.d.ts",
+        "require": "./dist/index.d.cts"
+      },
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./client": {
+      "types": {
+        "import": "./dist/client/index.d.ts",
+        "require": "./dist/client/index.d.cts"
+      },
+      "import": "./dist/client/index.mjs",
+      "require": "./dist/client/index.cjs"
+    },
+    "./server": {
+      "types": {
+        "import": "./dist/server/index.d.ts",
+        "require": "./dist/server/index.d.cts"
+      },
+      "import": "./dist/server/index.mjs",
+      "require": "./dist/server/index.cjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run --project unit --project client --project server",
+    "test:integration": "vitest run --project integration",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit",
+    "check": "pnpm lint && pnpm typecheck",
+    "prepublishOnly": "pnpm run build"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@types/jsdom": "^27.0.0",
+    "@types/node": "^25.2.2",
+    "@vitest/coverage-v8": "^4.0.18",
+    "jsdom": "^28.0.0",
+    "semantic-release": "^25.0.3",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  }
+}

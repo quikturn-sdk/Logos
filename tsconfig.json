@@ -1,0 +1,63 @@
+{
+  "compilerOptions": {
+    /* -------------------------------------------------------
+     * Language & Emit
+     * ES2020 provides: BigInt, Promise.allSettled, globalThis,
+     * nullish coalescing (??), optional chaining (?.), dynamic
+     * import() -- suitable for Node 18+ and modern browsers.
+     * ------------------------------------------------------- */
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+
+    /* -------------------------------------------------------
+     * Strict Type-Checking
+     * Enables all strict flags plus noUncheckedIndexedAccess
+     * for safer index-signature access throughout the SDK.
+     * ------------------------------------------------------- */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+
+    /* -------------------------------------------------------
+     * Interop
+     * esModuleInterop: synthetic default imports for CJS deps.
+     * resolveJsonModule: allows importing package.json, etc.
+     * skipLibCheck: skip .d.ts validation in node_modules for
+     * faster compilation.
+     * ------------------------------------------------------- */
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+
+    /* -------------------------------------------------------
+     * Declaration & Source Maps
+     * Emits .d.ts type declarations, declaration maps (for
+     * "go to source" in consuming projects), and source maps.
+     * ------------------------------------------------------- */
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+
+    /* -------------------------------------------------------
+     * Paths
+     * rootDir: source root for all three entry points.
+     * outDir: build output (tsup handles actual bundling,
+     * but tsc uses this for type-checking and direct emit).
+     * ------------------------------------------------------- */
+    "rootDir": "./src",
+    "outDir": "./dist"
+  },
+
+  /* ---------------------------------------------------------
+   * Include / Exclude
+   * Covers all three entry points:
+   *   - src/index.ts          (universal)
+   *   - src/client/index.ts   (browser)
+   *   - src/server/index.ts   (Node.js)
+   * Excludes build output, tests, and dependencies.
+   * --------------------------------------------------------- */
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "tests", "**/*.test.ts"]
+}
