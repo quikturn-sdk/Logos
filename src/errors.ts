@@ -10,6 +10,8 @@
  * `instanceof` checks work correctly in all environments.
  */
 
+import type { LogoErrorCode } from "./types";
+
 // ---------------------------------------------------------------------------
 // Base Error
 // ---------------------------------------------------------------------------
@@ -18,13 +20,13 @@
  * Base error class for all Logos SDK errors.
  *
  * Every error carries a human-readable `message`, a machine-readable `code`
- * string (e.g. "RATE_LIMIT_ERROR"), and an optional HTTP `status` code.
+ * (a {@link LogoErrorCode} discriminated union), and an optional HTTP `status` code.
  */
 export class LogoError extends Error {
-  code: string;
+  code: LogoErrorCode;
   status?: number;
 
-  constructor(message: string, code: string, status?: number) {
+  constructor(message: string, code: LogoErrorCode, status?: number) {
     super(message);
     this.name = "LogoError";
     this.code = code;
@@ -168,5 +170,19 @@ export class ScrapeTimeoutError extends LogoError {
     this.name = "ScrapeTimeoutError";
     this.jobId = jobId;
     this.elapsed = elapsed;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Bad Request
+// ---------------------------------------------------------------------------
+
+/**
+ * Thrown when the request is malformed or contains invalid parameters (HTTP 400).
+ */
+export class BadRequestError extends LogoError {
+  constructor(message: string) {
+    super(message, "BAD_REQUEST_ERROR", 400);
+    this.name = "BadRequestError";
   }
 }

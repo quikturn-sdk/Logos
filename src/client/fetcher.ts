@@ -13,12 +13,14 @@
 import {
   LogoError,
   AuthenticationError,
+  BadRequestError,
   ForbiddenError,
   NotFoundError,
   RateLimitError,
   QuotaExceededError,
 } from "../errors";
 import { parseRetryAfter } from "../headers";
+import { delay } from "../internal/delay";
 
 // ---------------------------------------------------------------------------
 // Public Types
@@ -60,16 +62,6 @@ const WARNING_THRESHOLD = 0.1;
 // ---------------------------------------------------------------------------
 // Internal Helpers
 // ---------------------------------------------------------------------------
-
-/**
- * Creates a promise that resolves after `ms` milliseconds.
- * Compatible with both real and fake timers (Vitest `vi.useFakeTimers`).
- */
-function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
 
 /**
  * Extracts the domain segment from a Logos API URL path.
@@ -216,7 +208,8 @@ export async function browserFetch(
     // ----- 403 Forbidden -----
     if (response.status === 403) {
       const body = await response.text();
-      throw new ForbiddenError(body, body);
+      const reason = body.slice(0, 256) || "unknown";
+      throw new ForbiddenError("Access forbidden", reason);
     }
 
     // ----- 404 Not Found -----
@@ -248,7 +241,8 @@ export async function browserFetch(
       // Rate limit — retry if attempts remain
       if (retryCount < maxRetries) {
         retryCount++;
-        await delay(retryAfter * 1000);
+        const retryDelay = Math.max(1, retryAfter) * 1000; // floor at 1 second
+        await delay(retryDelay);
         continue;
       }
 
@@ -268,8 +262,14 @@ export async function browserFetch(
       );
     }
 
+    // ----- 400 Bad Request -----
+    if (response.status === 400) {
+      const body = await response.text();
+      throw new BadRequestError(body.slice(0, 256) || "Bad request");
+    }
+
     // ----- 500 Server Error -----
-    if (response.status >= 500) {
+    if (response.status === 500) {
       if (!serverErrorRetried) {
         serverErrorRetried = true;
         await delay(SERVER_ERROR_RETRY_DELAY_MS);
@@ -277,13 +277,17 @@ export async function browserFetch(
       }
 
       const body = await response.text();
-      throw new LogoError(body, "SERVER_ERROR", 500);
+      throw new LogoError(
+        body.slice(0, 256) || "Internal server error",
+        "SERVER_ERROR",
+        500,
+      );
     }
 
     // ----- Other unexpected status codes -----
     const body = await response.text();
     throw new LogoError(
-      `Unexpected response status: ${response.status}`,
+      `Unexpected response: ${response.status}`,
       "UNEXPECTED_ERROR",
       response.status,
     );

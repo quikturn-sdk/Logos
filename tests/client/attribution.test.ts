@@ -167,4 +167,28 @@ describe("parseAttributionStatus", () => {
     expect(result!.graceDeadline).toBeUndefined();
     expect(result!.isValid).toBe(false);
   });
+
+  // -----------------------------------------------------------------------
+  // Unknown / invalid header values (runtime validation)
+  // -----------------------------------------------------------------------
+
+  it("Unknown X-Attribution-Status returns error status with isValid: false", () => {
+    const headers = new Headers({ "X-Attribution-Status": "unknown-future-status" });
+    const result = parseAttributionStatus(headers);
+    expect(result).not.toBeNull();
+    expect(result!.status).toBe("error");
+    expect(result!.isValid).toBe(false);
+  });
+
+  it("Invalid date in X-Attribution-Grace-Deadline returns undefined graceDeadline", () => {
+    const headers = new Headers({
+      "X-Attribution-Status": "grace-period",
+      "X-Attribution-Grace-Deadline": "not-a-date",
+    });
+    const result = parseAttributionStatus(headers);
+    expect(result).not.toBeNull();
+    expect(result!.graceDeadline).toBeUndefined();
+    // grace-period with no valid deadline -> isValid: false
+    expect(result!.isValid).toBe(false);
+  });
 });

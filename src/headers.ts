@@ -91,12 +91,21 @@ export function parseLogoHeaders(headers: Headers): LogoMetadata {
 
   // Transformation
   const transformApplied = headers.get("X-Transformation-Applied") === "true";
-  const transformStatus = headers.get("X-Transformation-Status") as
-    | LogoMetadata["transformation"]["status"]
-    | null;
-  const transformMethod = headers.get("X-Transformation-Method") as
-    | "images-binding"
-    | null;
+
+  const VALID_TRANSFORM_STATUSES = new Set([
+    "not-requested",
+    "unsupported-format",
+    "transformation-error",
+  ]);
+  const rawTransformStatus = headers.get("X-Transformation-Status");
+  const transformStatus =
+    rawTransformStatus && VALID_TRANSFORM_STATUSES.has(rawTransformStatus)
+      ? (rawTransformStatus as LogoMetadata["transformation"]["status"])
+      : undefined;
+
+  const rawTransformMethod = headers.get("X-Transformation-Method");
+  const transformMethod =
+    rawTransformMethod === "images-binding" ? "images-binding" : undefined;
   const transformWidth = safeParseInt(headers.get("X-Transformation-Width"), undefined);
   const transformGreyscale =
     headers.get("X-Transformation-Greyscale") === "true" ? true : undefined;

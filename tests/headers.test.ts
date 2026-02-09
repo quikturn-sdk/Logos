@@ -139,6 +139,18 @@ describe("parseLogoHeaders", () => {
       );
       expect(error.transformation.status).toBe("transformation-error");
     });
+
+    it("Unrecognized X-Transformation-Status is treated as undefined", () => {
+      const h = makeHeaders({ "X-Transformation-Status": "some-future-status" });
+      const meta = parseLogoHeaders(h);
+      expect(meta.transformation.status).toBeUndefined();
+    });
+
+    it("Unrecognized X-Transformation-Method is treated as undefined", () => {
+      const h = makeHeaders({ "X-Transformation-Method": "some-future-method" });
+      const meta = parseLogoHeaders(h);
+      expect(meta.transformation.method).toBeUndefined();
+    });
   });
 
   // -----------------------------------------------------------------------
@@ -205,5 +217,15 @@ describe("parseRetryAfter", () => {
       makeHeaders({ "Retry-After": "not-a-number" }),
     );
     expect(result).toBeNull();
+  });
+
+  it("parseRetryAfter returns negative values as-is (consumer must handle)", () => {
+    const h = makeHeaders({ "Retry-After": "-5" });
+    expect(parseRetryAfter(h)).toBe(-5);
+  });
+
+  it("parseRetryAfter returns float values", () => {
+    const h = makeHeaders({ "Retry-After": "2.5" });
+    expect(parseRetryAfter(h)).toBe(2.5);
   });
 });

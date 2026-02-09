@@ -195,3 +195,42 @@ export interface AttributionInfo {
   verifiedAt?: Date;
   isValid: boolean;
 }
+
+// ---------------------------------------------------------------------------
+// Error Code Discriminated Union
+// ---------------------------------------------------------------------------
+
+/**
+ * Discriminated union of all machine-readable error codes used by the SDK.
+ *
+ * Each code maps to a specific error class or error condition:
+ * - `DOMAIN_VALIDATION_ERROR` — {@link DomainValidationError}
+ * - `RATE_LIMIT_ERROR`        — {@link RateLimitError}
+ * - `QUOTA_EXCEEDED_ERROR`    — {@link QuotaExceededError}
+ * - `AUTHENTICATION_ERROR`    — {@link AuthenticationError}
+ * - `FORBIDDEN_ERROR`         — {@link ForbiddenError}
+ * - `NOT_FOUND_ERROR`         — {@link NotFoundError}
+ * - `SCRAPE_TIMEOUT_ERROR`    — {@link ScrapeTimeoutError}
+ * - `ABORT_ERROR`             — Abort signal triggered
+ * - `NETWORK_ERROR`           — Network failure
+ * - `SERVER_ERROR`            — HTTP 5xx response
+ * - `UNEXPECTED_ERROR`        — Unhandled HTTP status
+ * - `SCRAPE_FAILED`           — Scrape job failed
+ * - `SCRAPE_PARSE_ERROR`      — Scrape response parsing failure
+ * - `BAD_REQUEST_ERROR`       — {@link BadRequestError}
+ */
+export type LogoErrorCode =
+  | "DOMAIN_VALIDATION_ERROR"
+  | "RATE_LIMIT_ERROR"
+  | "QUOTA_EXCEEDED_ERROR"
+  | "AUTHENTICATION_ERROR"
+  | "FORBIDDEN_ERROR"
+  | "NOT_FOUND_ERROR"
+  | "SCRAPE_TIMEOUT_ERROR"
+  | "ABORT_ERROR"
+  | "NETWORK_ERROR"
+  | "SERVER_ERROR"
+  | "UNEXPECTED_ERROR"
+  | "SCRAPE_FAILED"
+  | "SCRAPE_PARSE_ERROR"
+  | "BAD_REQUEST_ERROR";

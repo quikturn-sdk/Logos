@@ -323,4 +323,32 @@ describe("logoUrl", () => {
       expect(url).not.toContain("token=");
     });
   });
+
+  // -----------------------------------------------------------------------
+  // Edge case domains (T2.37 - T2.41)
+  // -----------------------------------------------------------------------
+  describe("Edge case domains", () => {
+    it("T2.37 - rejects domain with consecutive dots (empty label)", () => {
+      expect(() => logoUrl("example..com")).toThrow(DomainValidationError);
+    });
+
+    it("T2.38 - rejects domain with port number", () => {
+      expect(() => logoUrl("example.com:8080")).toThrow(DomainValidationError);
+    });
+
+    it("T2.39 - accepts valid punycode/IDN domain", () => {
+      // xn--bcher-kva.example is valid punycode for buecher.example
+      const url = logoUrl("xn--bcher-kva.example");
+      expect(url).toContain("xn--bcher-kva.example");
+    });
+
+    it("T2.40 - rejects domain with only dots", () => {
+      expect(() => logoUrl("...")).toThrow(DomainValidationError);
+    });
+
+    it("T2.41 - rejects single-label domain (no dot)", () => {
+      // "localhost" is already tested, but test a generic single label
+      expect(() => logoUrl("intranet")).toThrow(DomainValidationError);
+    });
+  });
 });

@@ -12,6 +12,7 @@
 
 import type { ScrapePendingResponse, ScrapeProgressEvent } from "../types";
 import { LogoError, ScrapeTimeoutError } from "../errors";
+import { delay } from "../internal/delay";
 import type { browserFetch } from "./fetcher";
 
 // ---------------------------------------------------------------------------
@@ -51,40 +52,13 @@ const MAX_POLL_RETRIES = 3;
 // ---------------------------------------------------------------------------
 
 /**
- * Creates a promise that resolves after `ms` milliseconds, or rejects
- * immediately when the provided `AbortSignal` fires.
- *
- * Compatible with both real and fake timers (Vitest `vi.useFakeTimers`).
- */
-function delay(ms: number, signal?: AbortSignal): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
-    if (signal?.aborted) {
-      reject(new LogoError("Scrape polling aborted", "ABORT_ERROR"));
-      return;
-    }
-
-    const onAbort = () => {
-      clearTimeout(timer);
-      reject(new LogoError("Scrape polling aborted", "ABORT_ERROR"));
-    };
-
-    const timer = setTimeout(() => {
-      signal?.removeEventListener("abort", onAbort);
-      resolve();
-    }, ms);
-
-    signal?.addEventListener("abort", onAbort, { once: true });
-  });
-}
-
-/**
- * Appends a `token` query parameter to the given URL.
- * If the URL already contains query parameters, appends with `&`;
- * otherwise appends with `?`.
+ * Appends a `token` query parameter to the given URL using the URL API
+ * for correct encoding and query-string handling.
  */
 function appendToken(url: string, token: string): string {
-  const separator = url.includes("?") ? "&" : "?";
-  return `${url}${separator}token=${token}`;
+  const parsed = new URL(url);
+  parsed.searchParams.set("token", token);
+  return parsed.toString();
 }
 
 // ---------------------------------------------------------------------------
@@ -129,9 +103,29 @@ export async function handleScrapeResponse(
   }
 
   // ---- Parse 202 body ----
-  const body = (await response.json()) as ScrapePendingResponse;
+  let body: ScrapePendingResponse;
+  try {
+    body = (await response.json()) as ScrapePendingResponse;
+  } catch {
+    throw new LogoError("Failed to parse scrape response", "SCRAPE_PARSE_ERROR");
+  }
   const { scrapeJob } = body;
   const { jobId, pollUrl, estimatedWaitMs } = scrapeJob;
+
+  // ---- Validate pollUrl origin matches the original API origin ----
+  try {
+    const originalOrigin = new URL(originalUrl).origin;
+    const pollOrigin = new URL(pollUrl).origin;
+    if (pollOrigin !== originalOrigin) {
+      throw new LogoError(
+        "Poll URL origin does not match API origin",
+        "SCRAPE_PARSE_ERROR",
+      );
+    }
+  } catch (err) {
+    if (err instanceof LogoError) throw err;
+    throw new LogoError("Invalid poll URL", "SCRAPE_PARSE_ERROR");
+  }
 
   // ---- Resolve options ----
   const scrapeTimeout = options?.scrapeTimeout ?? DEFAULT_SCRAPE_TIMEOUT_MS;
@@ -140,19 +134,21 @@ export async function handleScrapeResponse(
   const token = options?.token;
 
   // ---- Polling loop ----
-  let backoff = estimatedWaitMs;
+  const MIN_BACKOFF_MS = 500;
+  let backoff = Math.max(MIN_BACKOFF_MS, estimatedWaitMs);
   const startTime = Date.now();
 
   // eslint-disable-next-line no-constant-condition
   while (true) {
-    // Wait the current backoff interval (abort-aware)
-    await delay(backoff, signal);
-
-    // Check timeout
+    // Check timeout BEFORE delay
     const elapsed = Date.now() - startTime;
-    if (elapsed >= scrapeTimeout) {
+    const remaining = scrapeTimeout - elapsed;
+    if (remaining <= 0) {
       throw new ScrapeTimeoutError("Scrape timed out", jobId, elapsed);
     }
+
+    // Wait the current backoff interval (abort-aware), clamped to remaining time
+    await delay(Math.min(backoff, remaining), signal);
 
     // Poll with network-error retries
     let pollResponse: Response;
@@ -168,13 +164,18 @@ export async function handleScrapeResponse(
         if (retries >= MAX_POLL_RETRIES) {
           throw err;
         }
-        // Brief delay before retry
-        await delay(backoff);
+        // Brief delay before retry (abort-aware)
+        await delay(backoff, signal);
       }
     }
 
     // Parse the poll result
-    const event = (await pollResponse.json()) as ScrapeProgressEvent;
+    let event: ScrapeProgressEvent;
+    try {
+      event = (await pollResponse.json()) as ScrapeProgressEvent;
+    } catch {
+      throw new LogoError("Failed to parse poll response", "SCRAPE_PARSE_ERROR");
+    }
 
     // Notify listener
     if (onScrapeProgress) {

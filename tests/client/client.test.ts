@@ -157,6 +157,12 @@ describe("QuikturnLogos", () => {
     expect(client).toBeInstanceOf(QuikturnLogos);
   });
 
+  it("T4.R9 - Constructor rejects whitespace-only tokens", () => {
+    expect(() => new QuikturnLogos({ token: "   " })).toThrow(AuthenticationError);
+    expect(() => new QuikturnLogos({ token: "   " })).toThrow("Token is required");
+    expect(() => new QuikturnLogos({ token: "\t\n" })).toThrow(AuthenticationError);
+  });
+
   // -----------------------------------------------------------------------
   // get() basic (T4.40 - T4.41)
   // -----------------------------------------------------------------------
@@ -439,6 +445,19 @@ describe("QuikturnLogos", () => {
         baseUrl: "https://custom-api.example.com",
       }),
     );
+  });
+
+  // -----------------------------------------------------------------------
+  // Error propagation (T4.R10)
+  // -----------------------------------------------------------------------
+
+  it("T4.R10 - get() propagates fetcher errors unchanged", async () => {
+    const authError = new AuthenticationError("Authentication failed");
+    vi.mocked(browserFetch).mockRejectedValue(authError);
+
+    const client = new QuikturnLogos({ token: "qt_test_123" });
+    await expect(client.get("google.com")).rejects.toThrow(authError);
+    await expect(client.get("google.com")).rejects.toBeInstanceOf(AuthenticationError);
   });
 
   // -----------------------------------------------------------------------

@@ -444,6 +444,118 @@ describe("handleScrapeResponse", () => {
   });
 
   // -----------------------------------------------------------------------
+  // Malformed 202 JSON body (T4.R6)
+  // -----------------------------------------------------------------------
+
+  it("T4.R6 - Malformed 202 JSON body throws LogoError with SCRAPE_PARSE_ERROR", async () => {
+    const response = {
+      status: 202,
+      ok: false,
+      headers: new Headers(),
+      json: () => Promise.reject(new SyntaxError("Unexpected token")),
+      text: () => Promise.resolve("not json"),
+      clone: () => response,
+    } as unknown as Response;
+
+    await expect(
+      handleScrapeResponse(response, "https://logos.getquikturn.io/test.com", fetchFn),
+    ).rejects.toThrow(LogoError);
+
+    try {
+      await handleScrapeResponse(response, "https://logos.getquikturn.io/test.com", fetchFn);
+    } catch (err: unknown) {
+      expect((err as LogoError).code).toBe("SCRAPE_PARSE_ERROR");
+    }
+  });
+
+  // -----------------------------------------------------------------------
+  // Backoff caps at MAX_BACKOFF_MS (T4.R7)
+  // -----------------------------------------------------------------------
+
+  it("T4.R7 - backoff caps at MAX_BACKOFF_MS (5000ms)", async () => {
+    vi.useFakeTimers();
+
+    const response202 = mock202Response({
+      scrapeJob: {
+        jobId: "job-cap",
+        pollUrl: "https://logos.getquikturn.io/scrape/status/job-cap",
+        estimatedWaitMs: 3000,
+      },
+    });
+
+    const pendingPoll = mockPollResponse({ status: "pending", progress: 10 });
+    const completePoll = mockPollResponse({
+      status: "complete",
+      progress: 100,
+      logo: { id: 1, url: "https://cdn.example.com/logo.png", companyId: 42, companyName: "Example Inc" },
+    });
+    const finalResponse = mockResponse(200, { "Content-Type": "image/png" });
+
+    fetchFn
+      .mockResolvedValueOnce(pendingPoll)    // 1st poll after 3000ms
+      .mockResolvedValueOnce(pendingPoll)    // 2nd poll after 5000ms (6000 capped to 5000)
+      .mockResolvedValueOnce(completePoll)   // 3rd poll after 5000ms (still capped)
+      .mockResolvedValueOnce(finalResponse); // final fetch
+
+    const promise = handleScrapeResponse(
+      response202,
+      "https://logos.getquikturn.io/example.com",
+      fetchFn,
+      { scrapeTimeout: 60_000 },
+    );
+
+    // Poll 1: after 3000ms (initial estimatedWaitMs)
+    await vi.advanceTimersByTimeAsync(3000);
+    expect(fetchFn).toHaveBeenCalledTimes(1);
+
+    // Poll 2: after 5000ms (3000 * 2 = 6000, capped to 5000)
+    await vi.advanceTimersByTimeAsync(5000);
+    expect(fetchFn).toHaveBeenCalledTimes(2);
+
+    // Poll 3: after 5000ms (still capped at 5000)
+    await vi.advanceTimersByTimeAsync(5000);
+
+    const result = await promise;
+    expect(result).toBe(finalResponse);
+    // 3 polls + 1 final fetch = 4 total calls
+    expect(fetchFn).toHaveBeenCalledTimes(4);
+  });
+
+  // -----------------------------------------------------------------------
+  // pollUrl origin mismatch (T4.R8)
+  // -----------------------------------------------------------------------
+
+  it("T4.R8 - pollUrl with different origin throws SCRAPE_PARSE_ERROR", async () => {
+    const response = mock202Response({
+      scrapeJob: {
+        jobId: "j1",
+        pollUrl: "https://evil.com/poll/j1",
+        estimatedWaitMs: 1000,
+      },
+    });
+
+    await expect(
+      handleScrapeResponse(response, "https://logos.getquikturn.io/test.com", fetchFn),
+    ).rejects.toThrow(LogoError);
+
+    try {
+      await handleScrapeResponse(
+        mock202Response({
+          scrapeJob: {
+            jobId: "j1",
+            pollUrl: "https://evil.com/poll/j1",
+            estimatedWaitMs: 1000,
+          },
+        }),
+        "https://logos.getquikturn.io/test.com",
+        fetchFn,
+      );
+    } catch (err: unknown) {
+      expect((err as LogoError).code).toBe("SCRAPE_PARSE_ERROR");
+    }
+  });
+
+  // -----------------------------------------------------------------------
   // Token passed to final fetch (T4.27)
   // -----------------------------------------------------------------------
 

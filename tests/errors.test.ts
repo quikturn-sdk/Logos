@@ -9,6 +9,7 @@ import {
   ForbiddenError,
   NotFoundError,
   ScrapeTimeoutError,
+  BadRequestError,
 } from "../src/errors";
 
 // ---------------------------------------------------------------------------
@@ -24,15 +25,15 @@ describe("LogoError", () => {
   // Base error construction (T3.1, T3.2)
   // -----------------------------------------------------------------------
   it("T3.1 - has message, code, and is an instance of Error", () => {
-    const err = new LogoError("test", "TEST");
+    const err = new LogoError("test", "UNEXPECTED_ERROR");
 
     expect(err.message).toBe("test");
-    expect(err.code).toBe("TEST");
+    expect(err.code).toBe("UNEXPECTED_ERROR");
     expect(err).toBeInstanceOf(Error);
   });
 
   it("T3.2 - name property equals 'LogoError'", () => {
-    const err = new LogoError("test", "TEST");
+    const err = new LogoError("test", "UNEXPECTED_ERROR");
 
     expect(err.name).toBe("LogoError");
   });
@@ -164,6 +165,26 @@ describe("DomainValidationError", () => {
   });
 });
 
+describe("BadRequestError", () => {
+  // -----------------------------------------------------------------------
+  // T3.14, T3.15
+  // -----------------------------------------------------------------------
+  it("T3.14 - is an instance of LogoError", () => {
+    const err = new BadRequestError("invalid parameters");
+
+    expect(err).toBeInstanceOf(LogoError);
+  });
+
+  it("T3.15 - has status 400 and correct code", () => {
+    const err = new BadRequestError("invalid parameters");
+
+    expect(err.status).toBe(400);
+    expect(err.code).toBe("BAD_REQUEST_ERROR");
+    expect(err.message).toBe("invalid parameters");
+    expect(err.name).toBe("BadRequestError");
+  });
+});
+
 // ---------------------------------------------------------------------------
 // Common behavior across all error classes (T3.12, T3.13)
 // ---------------------------------------------------------------------------
@@ -176,7 +197,7 @@ describe("common behavior", () => {
    * Each entry is a [label, instance] tuple for readable test output.
    */
   const errorInstances: [string, LogoError][] = [
-    ["LogoError", new LogoError("base error", "BASE")],
+    ["LogoError", new LogoError("base error", "UNEXPECTED_ERROR")],
     ["DomainValidationError", new DomainValidationError("bad domain", "!!!.com")],
     ["RateLimitError", new RateLimitError("rate limited", 60, 0, resetDate)],
     ["QuotaExceededError", new QuotaExceededError("quota exceeded", 86400, 500_000, 500_000)],
@@ -184,6 +205,7 @@ describe("common behavior", () => {
     ["ForbiddenError", new ForbiddenError("forbidden", "tier_too_low")],
     ["NotFoundError", new NotFoundError("not found", "example.com")],
     ["ScrapeTimeoutError", new ScrapeTimeoutError("timeout", "job123", 30000)],
+    ["BadRequestError", new BadRequestError("bad request")],
   ];
 
   it("T3.12 - all error classes are instances of Error", () => {

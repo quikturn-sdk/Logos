@@ -102,16 +102,17 @@ export class QuikturnLogos {
   private readonly objectUrls: Set<string>;
 
   constructor(options: BrowserClientOptions) {
-    if (!options.token) {
+    const token = options.token?.trim() ?? "";
+    if (!token) {
       throw new AuthenticationError("Token is required");
     }
-    if (options.token.startsWith("sk_")) {
+    if (token.startsWith("sk_")) {
       throw new AuthenticationError(
         "Server keys (sk_) are not allowed in the browser client",
       );
     }
 
-    this.token = options.token;
+    this.token = token;
     this.baseUrl = options.baseUrl;
     this.maxRetries = options.maxRetries ?? 2;
     this.listeners = new Map();

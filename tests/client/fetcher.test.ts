@@ -4,6 +4,7 @@ import { browserFetch } from "../../src/client/fetcher";
 import {
   LogoError,
   AuthenticationError,
+  BadRequestError,
   ForbiddenError,
   NotFoundError,
   RateLimitError,
@@ -406,5 +407,73 @@ describe("browserFetch", () => {
     });
 
     expect(onQuotaWarning).toHaveBeenCalledWith(40000, 500000);
+  });
+
+  // -----------------------------------------------------------------------
+  // Bad Request (T4.R1)
+  // -----------------------------------------------------------------------
+
+  it("T4.R1 - 400 response throws BadRequestError", async () => {
+    fetchSpy.mockResolvedValueOnce(mockResponse(400, {}, "Invalid domain format"));
+    await expect(browserFetch("https://logos.getquikturn.io/x")).rejects.toThrow(BadRequestError);
+  });
+
+  // -----------------------------------------------------------------------
+  // Unexpected status codes (T4.R2)
+  // -----------------------------------------------------------------------
+
+  it("T4.R2 - 502 response throws LogoError with UNEXPECTED_ERROR code", async () => {
+    fetchSpy.mockResolvedValueOnce(mockResponse(502, {}, "Bad Gateway"));
+    await expect(browserFetch("https://logos.getquikturn.io/x")).rejects.toThrow(LogoError);
+    fetchSpy.mockResolvedValueOnce(mockResponse(502, {}, "Bad Gateway"));
+    try {
+      await browserFetch("https://logos.getquikturn.io/x");
+    } catch (err: any) {
+      expect(err.code).toBe("UNEXPECTED_ERROR");
+      expect(err.status).toBe(502);
+    }
+  });
+
+  // -----------------------------------------------------------------------
+  // maxRetries: 0 on 429 (T4.R3)
+  // -----------------------------------------------------------------------
+
+  it("T4.R3 - 429 with maxRetries: 0 throws RateLimitError immediately", async () => {
+    fetchSpy.mockResolvedValue(mockResponse(429, { "Retry-After": "5", "X-RateLimit-Remaining": "0", "X-RateLimit-Reset": "1700000060" }));
+    await expect(browserFetch("https://logos.getquikturn.io/x", { maxRetries: 0 })).rejects.toThrow(RateLimitError);
+    expect(fetchSpy).toHaveBeenCalledTimes(1); // No retry
+  });
+
+  // -----------------------------------------------------------------------
+  // Warning at exact 10% boundary (T4.R4)
+  // -----------------------------------------------------------------------
+
+  it("T4.R4 - Rate limit warning does NOT fire at exactly 10% remaining", async () => {
+    fetchSpy.mockResolvedValueOnce(mockResponse(200, {
+      "X-RateLimit-Remaining": "10",
+      "X-RateLimit-Limit": "100",
+      "X-RateLimit-Reset": "1700000060",
+      "X-Quota-Remaining": "50000",
+      "X-Quota-Limit": "500000",
+    }));
+    const onRateLimitWarning = vi.fn();
+    await browserFetch("https://logos.getquikturn.io/x", { onRateLimitWarning });
+    expect(onRateLimitWarning).not.toHaveBeenCalled(); // 10/100 = 10%, not < 10%
+  });
+
+  // -----------------------------------------------------------------------
+  // Retry-After: 0 floor (T4.R5)
+  // -----------------------------------------------------------------------
+
+  it("T4.R5 - 429 with Retry-After: 0 floors to 1 second delay", async () => {
+    vi.useFakeTimers();
+    fetchSpy
+      .mockResolvedValueOnce(mockResponse(429, { "Retry-After": "0", "X-RateLimit-Remaining": "0", "X-RateLimit-Reset": "1700000060" }))
+      .mockResolvedValueOnce(mockResponse(200));
+    const promise = browserFetch("https://logos.getquikturn.io/x");
+    await vi.advanceTimersByTimeAsync(1000);
+    await promise;
+    expect(fetchSpy).toHaveBeenCalledTimes(2);
+    vi.useRealTimers();
   });
 });

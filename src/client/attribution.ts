@@ -26,6 +26,16 @@ import type { AttributionInfo, AttributionStatus } from "../types";
 // Internal Helpers
 // ---------------------------------------------------------------------------
 
+/** The complete set of recognised attribution status values (mirrors AttributionStatus). */
+const VALID_ATTRIBUTION_STATUSES: ReadonlySet<string> = new Set([
+  "verified",
+  "pending",
+  "unverified",
+  "failed",
+  "grace-period",
+  "error",
+]);
+
 /** Set of statuses that are unconditionally valid (no further checks needed). */
 const ALWAYS_VALID_STATUSES: ReadonlySet<AttributionStatus> = new Set([
   "verified",
@@ -81,6 +91,11 @@ export function parseAttributionStatus(headers: Headers): AttributionInfo | null
 
   // No attribution header means this is not a free-tier response.
   if (rawStatus === null) return null;
+
+  // Validate that the raw value is a recognised status; fall back to error for unknown values.
+  if (!VALID_ATTRIBUTION_STATUSES.has(rawStatus)) {
+    return { status: "error" as AttributionStatus, isValid: false };
+  }
 
   const status = rawStatus as AttributionStatus;
   const graceDeadline = safeParseDate(headers.get("X-Attribution-Grace-Deadline"));

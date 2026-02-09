@@ -20,6 +20,7 @@ export type {
   ScrapeProgressEvent,
   AttributionStatus,
   AttributionInfo,
+  LogoErrorCode,
 } from "./types";
 
 // --- Constants (runtime) ---
@@ -54,4 +55,5 @@ export {
   ForbiddenError,
   NotFoundError,
   ScrapeTimeoutError,
+  BadRequestError,
 } from "./errors";
