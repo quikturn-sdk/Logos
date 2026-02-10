@@ -39,6 +39,42 @@ All notable changes to the `@quikturn/logos` SDK will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-02-10
+
+### Added
+
+- **Attribution beacon** (`src/internal/beacon.ts`)
+  - Fire-and-forget 1x1 pixel via `new Image().src` to `/_beacon` endpoint
+  - Deduplicates by token per page load; skips `sk_` server keys and empty tokens
+  - SSR-safe: no-ops when `window` is not defined
+  - Integrated into browser client `get()` -- fires automatically after successful fetch
+
+- **`<quikturn-logo>` web component** (`@quikturn/logos/element`)
+  - Shadow DOM element with auto-registration as `quikturn-logo`
+  - Observed attributes: `domain`, `token`, `size`, `format`, `greyscale`, `theme`
+  - Built-in "Powered by Quikturn" attribution link with `!important` CSS in shadow DOM
+  - Fires attribution beacon on `connectedCallback`
+  - Safe `customElements.define` guard against double-registration
+  - No framework dependency -- works in plain HTML
+
+- **React components** (`@quikturn/logos-react` v0.1.0)
+  - `QuikturnProvider` -- context provider for token and base URL propagation
+  - `QuikturnLogo` -- single logo image with lazy loading, optional link wrapper
+  - `QuikturnLogoCarousel` -- infinite scrolling logo ticker (rAF-driven, horizontal/vertical, pause on hover, fade overlays, scale on hover)
+  - `QuikturnLogoGrid` -- responsive CSS grid layout for logos
+  - `useLogoUrl()` -- hook returning a memoized Quikturn logo URL
+  - Zero CSS dependencies (inline styles only)
+  - 54 tests across 5 test files
+
+### Changed
+
+- `tsconfig.json` -- added `"lib": ["ES2020", "DOM", "DOM.Iterable"]` for DOM type support
+- `package.json` -- `sideEffects` changed from `false` to array marking element entry points
+- Added `./element` to exports map
+- Monorepo structure: `pnpm-workspace.yaml` with `packages/*` workspace
+
+---
+
 ## [0.1.0] - 2026-02-09
 
 ### Added
@@ -82,4 +118,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Coverage thresholds enforced: 90% branches, 95% lines/functions/statements
   - Build verification tests: import resolution, bundle size checks, tree-shaking validation
 
+[0.2.0]: https://github.com/quikturn/logos-sdk/releases/tag/v0.2.0
 [0.1.0]: https://github.com/quikturn/logos-sdk/releases/tag/v0.1.0

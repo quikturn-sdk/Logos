@@ -20,7 +20,7 @@
     "sdk"
   ],
   "type": "module",
-  "sideEffects": false,
+  "sideEffects": ["./dist/element/index.mjs", "./dist/element/index.cjs"],
   "packageManager": "pnpm@10.28.1",
   "engines": {
     "node": ">=18"
@@ -55,6 +55,14 @@
       },
       "import": "./dist/server/index.mjs",
       "require": "./dist/server/index.cjs"
+    },
+    "./element": {
+      "types": {
+        "import": "./dist/element/index.d.ts",
+        "require": "./dist/element/index.d.cts"
+      },
+      "import": "./dist/element/index.mjs",
+      "require": "./dist/element/index.cjs"
     }
   },
   "publishConfig": {
@@ -65,7 +73,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsup",
-    "test": "vitest run --project unit --project client --project server",
+    "test": "vitest run --project unit --project client --project server --project element",
     "test:integration": "vitest run --project integration",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",

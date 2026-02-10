@@ -164,6 +164,7 @@ describe("Phase 6: Build & Packaging", () => {
     expect(output).toContain("dist/index.d.ts");
     expect(output).toContain("dist/client/index.mjs");
     expect(output).toContain("dist/server/index.mjs");
+    expect(output).toContain("dist/element/index.mjs");
     expect(output).toContain("package.json");
     // Should NOT include source files or tests
     expect(output).not.toContain("src/");
@@ -190,6 +191,8 @@ describe("Phase 6: Build & Packaging", () => {
       "client/index.cjs",
       "server/index.mjs",
       "server/index.cjs",
+      "element/index.mjs",
+      "element/index.cjs",
     ];
     let totalGzipped = 0;
     for (const file of files) {
@@ -210,6 +213,50 @@ describe("Phase 6: Build & Packaging", () => {
     expect(content).not.toContain("serverFetch");
     expect(content).not.toContain("QuikturnLogos");
     expect(content).not.toContain("handleScrapeResponse");
+  });
+
+  // -------------------------------------------------------------------------
+  // T6.E.1 - T6.E.6: Element entry dist files
+  // -------------------------------------------------------------------------
+  it("T6.E.1 - dist/element/index.mjs exists and contains QuikturnLogo", () => {
+    const filePath = resolve(DIST, "element/index.mjs");
+    expect(existsSync(filePath)).toBe(true);
+    const content = readFileSync(filePath, "utf-8");
+    expect(content).toContain("QuikturnLogo");
+  });
+
+  it("T6.E.2 - dist/element/index.cjs exists and contains QuikturnLogo", () => {
+    const filePath = resolve(DIST, "element/index.cjs");
+    expect(existsSync(filePath)).toBe(true);
+    const content = readFileSync(filePath, "utf-8");
+    expect(content).toContain("QuikturnLogo");
+  });
+
+  it("T6.E.3 - dist/element/index.d.ts exists", () => {
+    expect(existsSync(resolve(DIST, "element/index.d.ts"))).toBe(true);
+  });
+
+  it("T6.E.4 - Element entry does not import Node.js builtins", () => {
+    const mjs = readFileSync(resolve(DIST, "element/index.mjs"), "utf-8");
+    const cjs = readFileSync(resolve(DIST, "element/index.cjs"), "utf-8");
+    for (const content of [mjs, cjs]) {
+      expect(content).not.toMatch(/require\(["']node:/);
+      expect(content).not.toMatch(/from ["']node:/);
+    }
+  });
+
+  it("T6.E.5 - Element entry contains customElements", () => {
+    const mjs = readFileSync(resolve(DIST, "element/index.mjs"), "utf-8");
+    expect(mjs).toContain("customElements");
+  });
+
+  it("T6.E.6 - Element ESM bundle exports QuikturnLogo class definition", () => {
+    const content = readFileSync(resolve(DIST, "element/index.mjs"), "utf-8");
+    // Verify the class extends HTMLElement (tsup bundles as `var X = class extends HTMLElement`)
+    expect(content).toContain("QuikturnLogo");
+    expect(content).toContain("extends HTMLElement");
+    // Verify it exports the class
+    expect(content).toMatch(/export\s*\{[^}]*QuikturnLogo/);
   });
 
   // -------------------------------------------------------------------------

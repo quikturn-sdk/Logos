@@ -37,4 +37,13 @@ export default defineConfig([
     target: "node22",
     ...esmCjsExtensions,
   },
+  {
+    entry: { "element/index": "src/element/index.ts" },
+    format: ["esm", "cjs"],
+    dts: true,
+    treeshake: true,
+    outDir: "dist",
+    platform: "browser",
+    ...esmCjsExtensions,
+  },
 ]);
