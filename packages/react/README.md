@@ -1,6 +1,8 @@
 # @quikturn/logos-react
 
-> React components for the Quikturn Logos API -- drop-in logo display, infinite carousel, and responsive grid.
+> React components for the [Quikturn Logos API](https://getquikturn.io) -- drop-in logo display, infinite carousel, and responsive grid.
+
+**[Get your API key](https://getquikturn.io)** -- free tier available, no credit card required.
 
 ## Features
 
@@ -318,6 +320,13 @@ function CustomCarousel() {
 />
 ```
 
+## Resources
+
+- **[Quikturn website](https://getquikturn.io)** -- sign up, manage keys, explore the API
+- **[Dashboard](https://getquikturn.io/dashboard)** -- usage analytics, key management, plan upgrades
+- **[Pricing](https://getquikturn.io/pricing)** -- free tier, pro, and enterprise plans
+- **[Core SDK docs](https://www.npmjs.com/package/@quikturn/logos)** -- `@quikturn/logos` URL builder, browser client, server client
+
 ## License
 
-MIT
+MIT -- built by [Quikturn](https://getquikturn.io)
