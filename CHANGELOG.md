@@ -1,3 +1,10 @@
+## [0.4.1](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/compare/v0.4.0...v0.4.1) (2026-02-10)
+
+
+### Bug Fixes
+
+* **react-demo:** add react demo example ([#7](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/issues/7)) ([fef8a13](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/commit/fef8a13d0a89d95d715e4a9500571c853b77506a))
+
 # [0.4.0](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/compare/v0.3.0...v0.4.0) (2026-02-10)
 
 
