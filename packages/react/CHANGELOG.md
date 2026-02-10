@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/compare/react-v1.0.0...react-v1.1.0) (2026-02-10)
+
+
+### Features
+
+* **release:** add manual dispatch to release workflow ([975fcf6](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/commit/975fcf65cbcc969e30c2b23ac76d784aacdb0fac))
+
 # 1.0.0 (2026-02-10)
 
 
