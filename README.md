@@ -7,6 +7,8 @@
 - **Zero-dependency URL builder** -- universal, works in any JavaScript runtime
 - **Browser client** -- blob URL management, retry/backoff, scrape polling, event emission
 - **Server client** -- Buffer output, ReadableStream streaming, concurrent batch operations
+- **`<quikturn-logo>` web component** -- zero-effort attribution element with shadow DOM
+- **React components** -- see [`@quikturn/logos-react`](./packages/react/) for `<QuikturnLogo>`, `<QuikturnLogoCarousel>`, and `<QuikturnLogoGrid>`
 - **Full TypeScript support** -- strict types, discriminated union error codes, generic response shapes
 - **Tree-shakeable** -- ESM and CJS dual builds; import only what you need
 
@@ -102,6 +104,59 @@ import { Readable } from "node:stream";
 const stream = await client.getStream("github.com", { format: "png" });
 Readable.fromWeb(stream).pipe(createWriteStream("logo.png"));
 ```
+
+### Web Component
+
+The `<quikturn-logo>` custom element renders a logo with built-in attribution. It uses shadow DOM to protect the attribution badge and requires no framework.
+
+```html
+<script type="module">
+  import "@quikturn/logos/element";
+</script>
+
+<quikturn-logo
+  domain="github.com"
+  token="qt_abc123"
+  size="64"
+  format="webp"
+  theme="dark"
+></quikturn-logo>
+```
+
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| `domain` | `string` | Domain to fetch logo for (required for rendering) |
+| `token` | `string` | Publishable API key |
+| `size` | `string` | Image width in pixels |
+| `format` | `string` | `"png"`, `"jpeg"`, `"webp"`, or `"avif"` |
+| `greyscale` | presence | When present, applies greyscale transformation |
+| `theme` | `string` | `"light"` or `"dark"` |
+
+The element automatically registers as `quikturn-logo` on import and fires an attribution beacon on first render. Attribution styling uses `!important` rules inside the shadow DOM to prevent accidental removal.
+
+### React Components
+
+For React applications, install the companion package:
+
+```bash
+pnpm add @quikturn/logos-react
+```
+
+```tsx
+import { QuikturnProvider, QuikturnLogo, QuikturnLogoCarousel } from "@quikturn/logos-react";
+
+<QuikturnProvider token="qt_your_key">
+  <QuikturnLogo domain="github.com" size={64} />
+  <QuikturnLogoCarousel
+    domains={["github.com", "stripe.com", "vercel.com"]}
+    speed={120}
+    fadeOut
+    pauseOnHover
+  />
+</QuikturnProvider>
+```
+
+See the full API reference in [`@quikturn/logos-react` README](./packages/react/README.md).
 
 ## API Reference
 
