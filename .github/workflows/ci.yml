@@ -35,8 +35,25 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Typecheck
+      # --- @quikturn/logos (core) ---
+      - name: Typecheck (core)
         run: pnpm run typecheck
 
-      - name: Test
+      - name: Test (core)
         run: pnpm run test
+
+      - name: Build (core)
+        run: pnpm run build
+
+      # --- @quikturn/logos-react ---
+      - name: Typecheck (react)
+        working-directory: packages/react
+        run: pnpm run typecheck
+
+      - name: Test (react)
+        working-directory: packages/react
+        run: pnpm run test
+
+      - name: Build (react)
+        working-directory: packages/react
+        run: pnpm run build

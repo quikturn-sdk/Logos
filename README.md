@@ -2,6 +2,13 @@
 
 > TypeScript SDK for the Quikturn Logos API -- fetch company logos with type safety.
 
+## Packages
+
+| Package | Description | Install |
+|---------|-------------|---------|
+| [`@quikturn/logos`](./README.md) | Core SDK -- URL builder, browser client, server client, web component | `pnpm add @quikturn/logos` |
+| [`@quikturn/logos-react`](./packages/react/) | React components -- `<QuikturnLogo>`, `<QuikturnLogoCarousel>`, `<QuikturnLogoGrid>` | `pnpm add @quikturn/logos-react` |
+
 ## Features
 
 - **Zero-dependency URL builder** -- universal, works in any JavaScript runtime
@@ -471,6 +478,18 @@ client.get("github.com", { format: "webp" });
 ## Rate Limits & Quotas
 
 Rate limits and monthly quotas are enforced by the API server and vary by plan. The SDK automatically reads rate-limit headers to provide warnings via the event system and retries with backoff when limits are hit. See [Quikturn pricing](https://getquikturn.io/pricing) for details on your plan's limits.
+
+## Related Packages
+
+### [`@quikturn/logos-react`](./packages/react/)
+
+Ready-made React components for displaying Quikturn logos. Includes an infinite scrolling carousel, responsive grid, single logo image, context provider for token propagation, and a `useLogoUrl()` hook. Zero CSS dependencies -- inline styles only.
+
+```bash
+pnpm add @quikturn/logos-react @quikturn/logos
+```
+
+See the full documentation at [`packages/react/README.md`](./packages/react/README.md).
 
 ## License
 
