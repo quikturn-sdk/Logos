@@ -1,3 +1,13 @@
+# [0.3.0](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/compare/v0.2.1...v0.3.0) (2026-02-10)
+
+
+### Features
+
+* **element:** introduce web component for logo attribution ([54f7fd8](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/commit/54f7fd8f942389744a18cb75d617579379f94e74))
+* **packages/react:** add react package release configuration ([90f785c](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/commit/90f785cd86883bd8eb27ee4f6d4a930698c1149f))
+* **react package:** add QuikturnLogo components and utilities ([da68862](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/commit/da68862b849dc198b90021b528d91b19d37505bc))
+* **react-components:** introduce react components and web component ([47b29bc](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/commit/47b29bc2695e5d302fe87709fe51e5132a353293))
+
 ## [0.2.1](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/compare/v0.2.0...v0.2.1) (2026-02-09)
 
 
