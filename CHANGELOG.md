@@ -1,3 +1,10 @@
+# [0.4.0](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/compare/v0.3.0...v0.4.0) (2026-02-10)
+
+
+### Features
+
+* **release:** add manual dispatch to release workflow ([975fcf6](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/commit/975fcf65cbcc969e30c2b23ac76d784aacdb0fac))
+
 # [0.3.0](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/compare/v0.2.1...v0.3.0) (2026-02-10)
 
 
