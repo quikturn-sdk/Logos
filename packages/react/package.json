@@ -1,6 +1,6 @@
 {
   "name": "@quikturn/logos-react",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "React components for the Quikturn Logos API — QuikturnLogo, LogoCarousel, LogoGrid",
   "license": "MIT",
   "author": "Quikturn",
@@ -22,7 +22,10 @@
   "publishConfig": {
     "access": "public"
   },
-  "files": ["dist", "package.json"],
+  "files": [
+    "dist",
+    "package.json"
+  ],
   "scripts": {
     "build": "tsup",
     "test": "vitest run",
