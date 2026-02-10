@@ -32,6 +32,7 @@ import { browserFetch } from "./fetcher";
 import { handleScrapeResponse } from "./scrape-poller";
 import { AuthenticationError, LogoError } from "../errors";
 import { MAX_RESPONSE_BODY_BYTES } from "../constants";
+import { fireBeacon } from "../internal/beacon";
 
 // ---------------------------------------------------------------------------
 // Public Types
@@ -192,6 +193,9 @@ export class QuikturnLogos {
     // 6. Create a blob URL and track it for cleanup
     const objectUrl = URL.createObjectURL(blob);
     this.objectUrls.add(objectUrl);
+
+    // Fire attribution beacon
+    fireBeacon(this.token);
 
     return { url: objectUrl, blob, contentType, metadata };
   }

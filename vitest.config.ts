@@ -28,6 +28,13 @@ export default defineConfig({
       },
       {
         test: {
+          name: "element",
+          include: ["tests/element/**/*.test.ts"],
+          environment: "jsdom",
+        },
+      },
+      {
+        test: {
           name: "integration",
           include: ["tests/integration/**/*.test.ts"],
           environment: "node",
