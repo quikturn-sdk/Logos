@@ -6,8 +6,8 @@
 
 | Package | Description | Install |
 |---------|-------------|---------|
-| [`@quikturn/logos`](./README.md) | Core SDK -- URL builder, browser client, server client, web component | `pnpm add @quikturn/logos` |
-| [`@quikturn/logos-react`](./packages/react/) | React components -- `<QuikturnLogo>`, `<QuikturnLogoCarousel>`, `<QuikturnLogoGrid>` | `pnpm add @quikturn/logos-react` |
+| [`@quikturn/logos`](https://www.npmjs.com/package/@quikturn/logos) | Core SDK -- URL builder, browser client, server client, web component | `pnpm add @quikturn/logos` |
+| [`@quikturn/logos-react`](https://www.npmjs.com/package/@quikturn/logos-react) | React components -- `<QuikturnLogo>`, `<QuikturnLogoCarousel>`, `<QuikturnLogoGrid>` | `pnpm add @quikturn/logos-react` |
 
 ## Features
 
@@ -481,7 +481,7 @@ Rate limits and monthly quotas are enforced by the API server and vary by plan. 
 
 ## Related Packages
 
-### [`@quikturn/logos-react`](./packages/react/)
+### [`@quikturn/logos-react`](https://www.npmjs.com/package/@quikturn/logos-react)
 
 Ready-made React components for displaying Quikturn logos. Includes an infinite scrolling carousel, responsive grid, single logo image, context provider for token propagation, and a `useLogoUrl()` hook. Zero CSS dependencies -- inline styles only.
 
