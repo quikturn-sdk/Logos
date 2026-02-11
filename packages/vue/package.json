@@ -1,6 +1,6 @@
 {
   "name": "@quikturn/logos-vue",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Vue 3 components for the Quikturn Logos API — QuikturnLogo, LogoCarousel, LogoGrid",
   "license": "MIT",
   "author": "Quikturn",
@@ -31,11 +31,21 @@
     "url": "https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/issues"
   },
   "homepage": "https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/tree/main/packages/vue#readme",
-  "keywords": ["quikturn", "logos", "vue", "company-logos", "brand-assets"],
+  "keywords": [
+    "quikturn",
+    "logos",
+    "vue",
+    "company-logos",
+    "brand-assets"
+  ],
   "engines": {
     "node": ">=20"
   },
-  "files": ["dist", "LICENSE", "README.md"],
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "build": "vite build",
     "test": "vitest run",
