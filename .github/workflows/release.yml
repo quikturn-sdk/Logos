@@ -66,6 +66,11 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - name: Pull latest main
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git pull origin main
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
 
@@ -111,6 +116,11 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+
+      - name: Pull latest main
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git pull origin main
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -162,6 +172,11 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - name: Pull latest main
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git pull origin main
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
 
@@ -208,6 +223,11 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - name: Pull latest main
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git pull origin main
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
 
@@ -253,6 +273,11 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+
+      - name: Pull latest main
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git pull origin main
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
