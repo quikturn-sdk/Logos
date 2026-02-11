@@ -1,6 +1,6 @@
 {
   "name": "@quikturn/logos-next",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Next.js components for the Quikturn Logos API — QuikturnImage with next/image integration, server helpers",
   "license": "MIT",
   "author": "Quikturn",
