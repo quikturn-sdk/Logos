@@ -1,6 +1,6 @@
 {
   "name": "@quikturn/logos-svelte",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Svelte 5 components for the Quikturn Logos API — QuikturnLogo, LogoCarousel, LogoGrid",
   "license": "MIT",
   "author": "Quikturn",
@@ -27,11 +27,21 @@
     "url": "https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/issues"
   },
   "homepage": "https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/tree/main/packages/svelte#readme",
-  "keywords": ["quikturn", "logos", "svelte", "company-logos", "brand-assets"],
+  "keywords": [
+    "quikturn",
+    "logos",
+    "svelte",
+    "company-logos",
+    "brand-assets"
+  ],
   "engines": {
     "node": ">=20"
   },
-  "files": ["dist", "LICENSE", "README.md"],
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "build": "svelte-package -o dist",
     "test": "vitest run",
