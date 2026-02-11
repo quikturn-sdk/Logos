@@ -1,6 +1,6 @@
 {
   "name": "@quikturn/logos-next",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Next.js components for the Quikturn Logos API — QuikturnImage with next/image integration, server helpers",
   "license": "MIT",
   "author": "Quikturn",
@@ -39,11 +39,21 @@
     "url": "https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/issues"
   },
   "homepage": "https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/tree/main/packages/next#readme",
-  "keywords": ["quikturn", "logos", "next", "company-logos", "brand-assets"],
+  "keywords": [
+    "quikturn",
+    "logos",
+    "next",
+    "company-logos",
+    "brand-assets"
+  ],
   "engines": {
     "node": ">=20"
   },
-  "files": ["dist", "LICENSE", "README.md"],
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsup",
     "test": "vitest run",
