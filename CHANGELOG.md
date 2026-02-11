@@ -1,3 +1,10 @@
+# [0.6.0](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/compare/v0.5.0...v0.6.0) (2026-02-11)
+
+
+### Features
+
+* add multi-framework support and improve documentation ([#10](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/issues/10)) ([6781b9c](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/commit/6781b9cc838e76635164ae3d3c6c887a68891566))
+
 # [0.5.0](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/compare/v0.4.1...v0.5.0) (2026-02-11)
 
 
