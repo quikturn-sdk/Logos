@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, type CSSProperties } from "vue";
+import { computed, onMounted, type CSSProperties, type VNode } from "vue";
 import { logoUrl } from "@quikturn/logos";
 import type { SupportedOutputFormat, ThemeOption } from "@quikturn/logos";
 import { useQuikturnContext } from "../composables/useQuikturnContext";

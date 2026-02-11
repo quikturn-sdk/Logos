@@ -1,22 +1,36 @@
 # @quikturn/logos-angular
 
-Angular components for the [Quikturn Logos API](https://logos.quikturn.com) -- fetch polished company logos by domain. Built with standalone components and signal inputs for Angular 17+.
+> Angular components for the [Quikturn Logos API](https://getquikturn.io) -- drop-in logo display, infinite carousel, and responsive grid. Built with standalone components and signal inputs for Angular 17+.
 
-## Install
+**[Get your API key](https://getquikturn.io)** -- free tier available, no credit card required.
+
+## Features
+
+- **`<quikturn-logo>`** -- single logo image with lazy loading, optional link wrapper
+- **`<quikturn-logo-carousel>`** -- infinite scrolling logo ticker (horizontal or vertical)
+- **`<quikturn-logo-grid>`** -- responsive CSS grid of logos with custom template support
+- **`provideQuikturnLogos()`** -- DI-based configuration for token and base URL
+- **`injectLogoUrl()`** -- signal-based reactive logo URL builder
+- **`logoUrl` pipe** -- template pipe for domain-to-URL conversion
+- **Zero CSS dependencies** -- inline styles only, no Angular Material required
+- **Standalone components** -- no `NgModule` needed, import directly
+- **Signal inputs** -- modern Angular patterns with `input()` and `output()`
+
+## Installation
 
 ```bash
+# pnpm (recommended)
+pnpm add @quikturn/logos-angular @quikturn/logos
+
+# npm
 npm install @quikturn/logos-angular @quikturn/logos
 ```
 
-Or with pnpm:
+**Peer dependencies:** Angular `>= 17`, `@quikturn/logos >= 0.1.0`
 
-```bash
-pnpm add @quikturn/logos-angular @quikturn/logos
-```
+## Quick Start
 
-## Setup
-
-Provide your Quikturn API token at the application level using `provideQuikturnLogos()`:
+### 1. Provide your token at the application level
 
 ```typescript
 // app.config.ts
@@ -25,71 +39,184 @@ import { provideQuikturnLogos } from "@quikturn/logos-angular";
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideQuikturnLogos({ token: "qt_your_token" }),
+    provideQuikturnLogos({ token: "qt_your_publishable_key" }),
   ],
 };
 ```
 
-All components, pipes, and signal functions will automatically inherit this token.
-
-## Components
-
-### `<quikturn-logo>`
-
-Renders a single logo image. Standalone component with signal inputs.
+### 2. Import and use components
 
 ```typescript
 import { Component } from "@angular/core";
-import { QuikturnLogoComponent } from "@quikturn/logos-angular";
+import { QuikturnLogoComponent, QuikturnLogoCarouselComponent } from "@quikturn/logos-angular";
 
 @Component({
   selector: "app-example",
   standalone: true,
-  imports: [QuikturnLogoComponent],
-  template: `<quikturn-logo domain="github.com" />`,
+  imports: [QuikturnLogoComponent, QuikturnLogoCarouselComponent],
+  template: `
+    <!-- Single logo -->
+    <quikturn-logo domain="github.com" [size]="64" />
+
+    <!-- Infinite scrolling carousel -->
+    <quikturn-logo-carousel
+      [domains]="['github.com', 'stripe.com', 'vercel.com', 'figma.com']"
+      [speed]="120"
+      [fadeOut]="true"
+      [pauseOnHover]="true"
+    />
+  `,
 })
 export class ExampleComponent {}
+```
+
+All components, pipes, and signal functions automatically inherit the token from `provideQuikturnLogos()`.
+
+## API Reference
+
+### `provideQuikturnLogos(config)`
+
+Provides Quikturn configuration to the Angular DI system. Call this in your `ApplicationConfig` or a component's `providers` array.
+
+```typescript
+provideQuikturnLogos({ token: "qt_abc123", baseUrl: "https://custom.api" })
+```
+
+| Option | Type | Required | Description |
+|--------|------|----------|-------------|
+| `token` | `string` | yes | Publishable API key (`qt_`/`pk_` prefix) |
+| `baseUrl` | `string` | no | Override the Quikturn API base URL |
+
+---
+
+### `<quikturn-logo>`
+
+Renders a single logo `<img>`. Optionally wraps in an `<a>` tag when `href` is provided. Validates `href` to reject `javascript:` and `data:` protocols.
+
+```html
+<quikturn-logo
+  domain="stripe.com"
+  [size]="128"
+  format="webp"
+  [greyscale]="true"
+  theme="dark"
+  alt="Stripe"
+  href="https://stripe.com"
+  loading="lazy"
+  class="my-logo"
+/>
 ```
 
 #### Inputs
 
 | Input | Type | Default | Description |
 |-------|------|---------|-------------|
-| `domain` | `string` | -- | Domain to fetch logo for (required) |
-| `token` | `string` | -- | Override provider token |
-| `baseUrl` | `string` | -- | Override provider base URL |
-| `alt` | `string` | `"${domain} logo"` | Image alt text |
-| `href` | `string` | -- | Wrap image in a link |
-| `class` | `string` | -- | CSS class on wrapper element |
-| `loading` | `"lazy" \| "eager"` | `"lazy"` | Image loading strategy |
+| `domain` | `string` | **required** | Domain to fetch logo for |
+| `token` | `string` | from provider | Publishable API key |
+| `baseUrl` | `string` | from provider | API base URL override |
 | `size` | `number` | -- | Logo width in pixels |
-| `format` | `string` | -- | Output format (`"png"`, `"webp"`, `"jpeg"`, `"avif"`) |
-| `greyscale` | `boolean` | -- | Render in greyscale |
-| `theme` | `string` | -- | Theme option (`"light"` or `"dark"`) |
+| `format` | `string` | -- | `"png"`, `"jpeg"`, `"webp"`, `"avif"`, or MIME type |
+| `greyscale` | `boolean` | -- | Greyscale transformation |
+| `theme` | `string` | -- | `"light"` or `"dark"` |
+| `alt` | `string` | `"<domain> logo"` | Image alt text |
+| `href` | `string` | -- | Wraps the image in a link |
+| `loading` | `"lazy" \| "eager"` | `"lazy"` | Native image loading strategy |
+| `class` | `string` | -- | CSS class on wrapper element |
+
+#### Outputs
+
+| Output | Type | Description |
+|--------|------|-------------|
+| `imgError` | `Event` | Emitted when the logo image fails to load |
+| `imgLoad` | `Event` | Emitted when the logo image loads successfully |
+
+---
+
+### `<quikturn-logo-carousel>`
+
+Infinite scrolling logo ticker powered by `requestAnimationFrame`. Supports horizontal (left/right) and vertical (up/down) scrolling, hover-based speed changes, fade overlays, and per-logo customization.
+
+```html
+<quikturn-logo-carousel
+  [domains]="['github.com', 'stripe.com', 'vercel.com', 'figma.com']"
+  [speed]="120"
+  direction="left"
+  [logoHeight]="28"
+  [gap]="48"
+  [fadeOut]="true"
+  fadeOutColor="#f5f5f5"
+  [pauseOnHover]="true"
+  [scaleOnHover]="true"
+  width="100%"
+/>
+```
+
+#### Using `logos` for per-logo configuration
+
+```html
+<quikturn-logo-carousel
+  [logos]="[
+    { domain: 'github.com', href: 'https://github.com', alt: 'GitHub' },
+    { domain: 'stripe.com', size: 256, greyscale: true },
+    { domain: 'vercel.com', theme: 'dark' }
+  ]"
+/>
+```
+
+#### Inputs
+
+| Input | Type | Default | Description |
+|-------|------|---------|-------------|
+| `domains` | `string[]` | -- | Simple list of domains (use this or `logos`) |
+| `logos` | `LogoConfig[]` | -- | Per-logo configuration objects (use this or `domains`) |
+| `token` | `string` | from provider | Publishable API key |
+| `baseUrl` | `string` | from provider | API base URL override |
+| `speed` | `number` | `120` | Scroll speed in pixels per second |
+| `direction` | `"left" \| "right" \| "up" \| "down"` | `"left"` | Scroll direction |
+| `pauseOnHover` | `boolean` | -- | Pause scrolling on mouse hover |
+| `hoverSpeed` | `number` | -- | Custom speed during hover (`0` = pause, overrides `pauseOnHover`) |
+| `logoHeight` | `number` | `28` | Height of each logo image in pixels |
+| `gap` | `number` | `32` | Gap between logos in pixels |
+| `width` | `number \| string` | `"100%"` | Container width (`600`, `"80%"`, etc.) |
+| `fadeOut` | `boolean` | `false` | Show gradient fade overlays at edges |
+| `fadeOutColor` | `string` | `"#ffffff"` | Fade overlay color (match your background) |
+| `scaleOnHover` | `boolean` | `false` | Scale logos on individual hover |
+| `logoSize` | `number` | -- | Default image fetch width for all logos |
+| `logoFormat` | `string` | -- | Default image format for all logos |
+| `logoGreyscale` | `boolean` | -- | Default greyscale setting for all logos |
+| `logoTheme` | `string` | -- | Default theme for all logos |
+| `class` | `string` | -- | CSS class on root container |
+| `ariaLabel` | `string` | `"Company logos"` | Accessible label for the region |
+
+#### `LogoConfig`
+
+Used in the `logos` array for per-logo customization:
+
+```typescript
+interface LogoConfig {
+  domain: string;        // Required
+  href?: string;         // Wrap in link
+  alt?: string;          // Alt text override
+  size?: number;         // Per-logo image width
+  format?: string;       // Per-logo format
+  greyscale?: boolean;   // Per-logo greyscale
+  theme?: "light" | "dark";
+}
+```
 
 ---
 
 ### `<quikturn-logo-grid>`
 
-Grid layout of logos with optional custom templates.
+Responsive CSS grid of logos with optional custom templates.
 
-```typescript
-import { Component } from "@angular/core";
-import { QuikturnLogoGridComponent } from "@quikturn/logos-angular";
-
-@Component({
-  selector: "app-grid",
-  standalone: true,
-  imports: [QuikturnLogoGridComponent],
-  template: `
-    <quikturn-logo-grid
-      [domains]="['github.com', 'google.com', 'apple.com', 'microsoft.com']"
-      [columns]="2"
-      [gap]="16"
-    />
-  `,
-})
-export class GridComponent {}
+```html
+<quikturn-logo-grid
+  [domains]="['github.com', 'stripe.com', 'vercel.com', 'figma.com']"
+  [columns]="4"
+  [gap]="24"
+  ariaLabel="Our partners"
+/>
 ```
 
 #### Custom template
@@ -109,75 +236,22 @@ export class GridComponent {}
 
 | Input | Type | Default | Description |
 |-------|------|---------|-------------|
-| `domains` | `string[]` | -- | Array of domains to display |
-| `logos` | `LogoConfig[]` | -- | Detailed per-logo configuration |
-| `token` | `string` | -- | Override provider token |
-| `baseUrl` | `string` | -- | Override provider base URL |
+| `domains` | `string[]` | -- | Simple list of domains (use this or `logos`) |
+| `logos` | `LogoConfig[]` | -- | Per-logo configuration objects |
+| `token` | `string` | from provider | Publishable API key |
+| `baseUrl` | `string` | from provider | API base URL override |
 | `columns` | `number` | `4` | Number of grid columns |
-| `gap` | `number` | `24` | Gap between items in pixels |
-| `logoSize` | `number` | -- | Default logo size for all items |
-| `logoFormat` | `string` | -- | Default logo format for all items |
-| `logoGreyscale` | `boolean` | -- | Default greyscale for all items |
-| `logoTheme` | `string` | -- | Default theme for all items |
-| `class` | `string` | -- | CSS class on the grid container |
+| `gap` | `number` | `24` | Grid gap in pixels |
+| `logoSize` | `number` | -- | Default image fetch width |
+| `logoFormat` | `string` | -- | Default image format |
+| `logoGreyscale` | `boolean` | -- | Default greyscale |
+| `logoTheme` | `string` | -- | Default theme |
+| `class` | `string` | -- | CSS class on grid container |
 | `ariaLabel` | `string` | `"Company logos"` | Accessible label for the region |
 
 ---
 
-### `<quikturn-logo-carousel>`
-
-Infinite scrolling logo carousel with smooth animation.
-
-```typescript
-import { Component } from "@angular/core";
-import { QuikturnLogoCarouselComponent } from "@quikturn/logos-angular";
-
-@Component({
-  selector: "app-carousel",
-  standalone: true,
-  imports: [QuikturnLogoCarouselComponent],
-  template: `
-    <quikturn-logo-carousel
-      [domains]="['github.com', 'google.com', 'apple.com', 'amazon.com', 'netflix.com']"
-      [speed]="80"
-      [pauseOnHover]="true"
-      [fadeOut]="true"
-    />
-  `,
-})
-export class CarouselComponent {}
-```
-
-#### Inputs
-
-| Input | Type | Default | Description |
-|-------|------|---------|-------------|
-| `domains` | `string[]` | -- | Array of domains to display |
-| `logos` | `LogoConfig[]` | -- | Detailed per-logo configuration |
-| `token` | `string` | -- | Override provider token |
-| `baseUrl` | `string` | -- | Override provider base URL |
-| `speed` | `number` | `120` | Scroll speed in pixels per second |
-| `direction` | `"left" \| "right" \| "up" \| "down"` | `"left"` | Scroll direction |
-| `pauseOnHover` | `boolean` | -- | Pause scrolling on hover |
-| `hoverSpeed` | `number` | -- | Speed when hovered (0 = pause) |
-| `logoHeight` | `number` | `28` | Logo height in pixels |
-| `gap` | `number` | `32` | Gap between logos in pixels |
-| `width` | `number \| string` | `"100%"` | Container width |
-| `fadeOut` | `boolean` | `false` | Show fade overlays at edges |
-| `fadeOutColor` | `string` | `"#ffffff"` | Fade gradient color |
-| `scaleOnHover` | `boolean` | `false` | Scale logos on hover |
-| `logoSize` | `number` | -- | Default logo size option |
-| `logoFormat` | `string` | -- | Default logo format option |
-| `logoGreyscale` | `boolean` | -- | Default greyscale option |
-| `logoTheme` | `string` | -- | Default theme option |
-| `class` | `string` | -- | CSS class on root element |
-| `ariaLabel` | `string` | `"Company logos"` | Accessible label for the region |
-
----
-
-## Pipe
-
-### `logoUrl`
+### `logoUrl` Pipe
 
 Transform a domain string into a logo URL directly in templates.
 
@@ -205,11 +279,9 @@ The pipe reads the token from the `QUIKTURN_CONFIG` injection token. You can ove
 
 ---
 
-## Signal Function
+### `injectLogoUrl(options)`
 
-### `injectLogoUrl()`
-
-Signal-based helper that builds a reactive logo URL. Must be called within an injection context.
+Signal-based helper that builds a reactive logo URL. Must be called within an Angular injection context. The returned signal recomputes automatically whenever any input signal changes.
 
 ```typescript
 import { Component, signal } from "@angular/core";
@@ -231,7 +303,17 @@ export class SignalDemoComponent {
 }
 ```
 
-The returned signal recomputes automatically whenever any input signal changes.
+| Option | Type | Description |
+|--------|------|-------------|
+| `domain` | `() => string` | Reactive getter for the domain (required) |
+| `token` | `() => string \| undefined` | Override the provider token |
+| `baseUrl` | `() => string \| undefined` | Override the provider base URL |
+| `size` | `() => number \| undefined` | Logo width in pixels |
+| `format` | `() => string \| undefined` | Output format |
+| `greyscale` | `() => boolean \| undefined` | Greyscale transformation |
+| `theme` | `() => string \| undefined` | Theme optimization |
+
+**Returns:** `Signal<string>` -- computed signal with the full logo URL
 
 ---
 
@@ -263,7 +345,7 @@ import type {
 
 ---
 
-## API Reference
+## API Summary
 
 | Export | Kind | Description |
 |--------|------|-------------|
@@ -277,11 +359,97 @@ import type {
 
 ---
 
-## Requirements
+## Examples
 
-- Angular **17+** with standalone components
-- `@quikturn/logos` (peer dependency, installed alongside)
+### Logo Wall (Marketing Page)
+
+```typescript
+@Component({
+  selector: "app-logo-wall",
+  standalone: true,
+  imports: [QuikturnLogoCarouselComponent],
+  template: `
+    <h2>Trusted by industry leaders</h2>
+    <quikturn-logo-carousel
+      [domains]="partners"
+      [speed]="80"
+      [logoHeight]="32"
+      [gap]="64"
+      [fadeOut]="true"
+      [pauseOnHover]="true"
+    />
+  `,
+})
+export class LogoWallComponent {
+  partners = [
+    "github.com", "stripe.com", "vercel.com", "figma.com",
+    "linear.app", "notion.so", "slack.com", "discord.com",
+  ];
+}
+```
+
+### Partner Grid with Links
+
+```typescript
+@Component({
+  selector: "app-partner-grid",
+  standalone: true,
+  imports: [QuikturnLogoGridComponent],
+  template: `
+    <quikturn-logo-grid [logos]="partners" [columns]="2" [gap]="32" />
+  `,
+})
+export class PartnerGridComponent {
+  partners: LogoConfig[] = [
+    { domain: "github.com", href: "https://github.com", alt: "GitHub" },
+    { domain: "stripe.com", href: "https://stripe.com", alt: "Stripe" },
+    { domain: "vercel.com", href: "https://vercel.com", alt: "Vercel" },
+    { domain: "figma.com", href: "https://figma.com", alt: "Figma" },
+  ];
+}
+```
+
+### Vertical Carousel
+
+```html
+<div style="height: 240px">
+  <quikturn-logo-carousel
+    [domains]="['github.com', 'stripe.com', 'vercel.com']"
+    direction="up"
+    [speed]="60"
+    [logoHeight]="24"
+  />
+</div>
+```
+
+### Signal-Based Reactive URL
+
+```typescript
+@Component({
+  selector: "app-reactive",
+  standalone: true,
+  template: `
+    <input [(ngModel)]="domain" placeholder="Enter a domain" />
+    <img [src]="logoSrc()" [alt]="domain() + ' logo'" />
+  `,
+})
+export class ReactiveComponent {
+  domain = signal("github.com");
+  logoSrc = injectLogoUrl({
+    domain: () => this.domain(),
+    size: () => 256,
+    format: () => "webp",
+  });
+}
+```
+
+## Resources
+
+- **[Quikturn website](https://getquikturn.io)** -- sign up, manage keys, explore the API
+- **[Dashboard](https://getquikturn.io/dashboard)** -- usage analytics, key management, plan upgrades
+- **[Pricing](https://getquikturn.io/pricing)** -- free tier, pro, and enterprise plans
+- **[Core SDK docs](https://www.npmjs.com/package/@quikturn/logos)** -- `@quikturn/logos` URL builder, browser client, server client
 
 ## License
 
-MIT
+MIT -- built by [Quikturn](https://getquikturn.io)

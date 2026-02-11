@@ -30,7 +30,7 @@
   "homepage": "https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/tree/main/packages/angular#readme",
   "keywords": ["quikturn", "logos", "angular", "company-logos", "brand-assets"],
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "files": [
     "dist",

@@ -6,10 +6,13 @@ import {
   platformBrowserDynamicTesting,
 } from "@angular/platform-browser-dynamic/testing";
 
-getTestBed().initTestEnvironment(
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting(),
-);
+const testBed = getTestBed();
+if (!testBed.platform) {
+  testBed.initTestEnvironment(
+    BrowserDynamicTestingModule,
+    platformBrowserDynamicTesting(),
+  );
+}
 
 // Mock ResizeObserver (not available in jsdom)
 if (typeof globalThis.ResizeObserver === "undefined") {

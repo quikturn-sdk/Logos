@@ -41,7 +41,7 @@
   "homepage": "https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/tree/main/packages/next#readme",
   "keywords": ["quikturn", "logos", "next", "company-logos", "brand-assets"],
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "files": ["dist", "LICENSE", "README.md"],
   "scripts": {

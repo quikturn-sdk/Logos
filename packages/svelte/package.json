@@ -29,7 +29,7 @@
   "homepage": "https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/tree/main/packages/svelte#readme",
   "keywords": ["quikturn", "logos", "svelte", "company-logos", "brand-assets"],
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "files": ["dist", "LICENSE", "README.md"],
   "scripts": {

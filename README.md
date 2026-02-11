@@ -4,10 +4,14 @@ TypeScript SDK for the [Quikturn Logos API](https://getquikturn.io) -- fetch any
 
 **[Get your API key](https://getquikturn.io)** -- free tier available, no credit card required.
 
-| Package | Description | |
-|---------|-------------|-|
+| Package | Description | Install |
+|---------|-------------|---------|
 | [`@quikturn/logos`](https://www.npmjs.com/package/@quikturn/logos) | Core SDK -- URL builder, browser client, server client, web component | `pnpm add @quikturn/logos` |
 | [`@quikturn/logos-react`](https://www.npmjs.com/package/@quikturn/logos-react) | React components -- logo, carousel, grid | `pnpm add @quikturn/logos-react` |
+| [`@quikturn/logos-next`](https://www.npmjs.com/package/@quikturn/logos-next) | Next.js -- `next/image` wrapper, loaders, server helpers | `pnpm add @quikturn/logos-next` |
+| [`@quikturn/logos-vue`](https://www.npmjs.com/package/@quikturn/logos-vue) | Vue 3 components -- logo, carousel, grid, plugin | `pnpm add @quikturn/logos-vue` |
+| [`@quikturn/logos-svelte`](https://www.npmjs.com/package/@quikturn/logos-svelte) | Svelte 5 components -- logo, carousel, grid, runes | `pnpm add @quikturn/logos-svelte` |
+| [`@quikturn/logos-angular`](https://www.npmjs.com/package/@quikturn/logos-angular) | Angular 17+ -- standalone components, signals, pipe | `pnpm add @quikturn/logos-angular` |
 
 ---
 
@@ -29,7 +33,16 @@ pnpm add @quikturn/logos
 | **Browser** | `@quikturn/logos/client` | Blob URLs, retry/backoff, scrape polling, events |
 | **Server** | `@quikturn/logos/server` | Buffer output, streaming, batch operations |
 | **Element** | `@quikturn/logos/element` | `<quikturn-logo>` web component with built-in attribution |
-| **React** | `@quikturn/logos-react` | `<QuikturnLogo>`, `<QuikturnLogoCarousel>`, `<QuikturnLogoGrid>` |
+
+### Framework Packages
+
+| Package | Import | Framework |
+|---------|--------|-----------|
+| **React** | `@quikturn/logos-react` | React 18+ -- components, hooks, context |
+| **Next.js** | `@quikturn/logos-next` | Next.js 14+ -- `next/image` wrapper, server helpers |
+| **Vue** | `@quikturn/logos-vue` | Vue 3.3+ -- SFCs, composables, plugin |
+| **Svelte** | `@quikturn/logos-svelte` | Svelte 5 -- runes, snippets, context |
+| **Angular** | `@quikturn/logos-angular` | Angular 17+ -- standalone components, signals, pipe |
 
 ---
 
@@ -134,7 +147,116 @@ function App() {
 }
 ```
 
-Full React API reference: [`@quikturn/logos-react` docs](./packages/react/README.md)
+Full API reference: [`@quikturn/logos-react` docs](./packages/react/README.md)
+
+### Next.js
+
+```bash
+pnpm add @quikturn/logos-next
+```
+
+```tsx
+import { QuikturnProvider, QuikturnImage } from "@quikturn/logos-next";
+
+export default function Page() {
+  return (
+    <QuikturnProvider token="qt_your_key">
+      <QuikturnImage domain="github.com" width={128} height={128} alt="GitHub" />
+    </QuikturnProvider>
+  );
+}
+```
+
+Full API reference: [`@quikturn/logos-next` docs](./packages/next/README.md)
+
+### Vue
+
+```bash
+pnpm add @quikturn/logos-vue
+```
+
+```vue
+<script setup lang="ts">
+import { QuikturnLogo, QuikturnLogoCarousel } from "@quikturn/logos-vue";
+</script>
+
+<template>
+  <QuikturnLogo domain="github.com" :size="64" />
+
+  <QuikturnLogoCarousel
+    :domains="['github.com', 'stripe.com', 'vercel.com', 'figma.com']"
+    :speed="120"
+    fade-out
+    pause-on-hover
+  />
+</template>
+```
+
+Full API reference: [`@quikturn/logos-vue` docs](./packages/vue/README.md)
+
+### Svelte
+
+```bash
+pnpm add @quikturn/logos-svelte
+```
+
+```svelte
+<script>
+  import { QuikturnProvider, QuikturnLogo, QuikturnLogoCarousel } from "@quikturn/logos-svelte";
+</script>
+
+<QuikturnProvider token="qt_your_key">
+  <QuikturnLogo domain="github.com" size={64} />
+
+  <QuikturnLogoCarousel
+    domains={["github.com", "stripe.com", "vercel.com", "figma.com"]}
+    speed={120}
+    fadeOut
+    pauseOnHover
+  />
+</QuikturnProvider>
+```
+
+Full API reference: [`@quikturn/logos-svelte` docs](./packages/svelte/README.md)
+
+### Angular
+
+```bash
+pnpm add @quikturn/logos-angular
+```
+
+```typescript
+// app.config.ts
+import { provideQuikturnLogos } from "@quikturn/logos-angular";
+
+export const appConfig = {
+  providers: [provideQuikturnLogos({ token: "qt_your_key" })],
+};
+```
+
+```typescript
+import { Component } from "@angular/core";
+import { QuikturnLogoComponent, QuikturnLogoCarouselComponent } from "@quikturn/logos-angular";
+
+@Component({
+  selector: "app-example",
+  standalone: true,
+  imports: [QuikturnLogoComponent, QuikturnLogoCarouselComponent],
+  template: `
+    <quikturn-logo domain="github.com" [size]="64" />
+
+    <quikturn-logo-carousel
+      [domains]="['github.com', 'stripe.com', 'vercel.com', 'figma.com']"
+      [speed]="120"
+      [fadeOut]="true"
+      [pauseOnHover]="true"
+    />
+  `,
+})
+export class ExampleComponent {}
+```
+
+Full API reference: [`@quikturn/logos-angular` docs](./packages/angular/README.md)
 
 ---
 
@@ -372,6 +494,10 @@ Rate limits and monthly quotas are enforced server-side and vary by plan. The SD
 - **[Dashboard](https://getquikturn.io/dashboard)** -- usage analytics, key management, plan upgrades
 - **[Pricing](https://getquikturn.io/pricing)** -- free tier, pro, and enterprise plans
 - **[React components](./packages/react/README.md)** -- `@quikturn/logos-react` docs
+- **[Next.js components](./packages/next/README.md)** -- `@quikturn/logos-next` docs
+- **[Vue components](./packages/vue/README.md)** -- `@quikturn/logos-vue` docs
+- **[Svelte components](./packages/svelte/README.md)** -- `@quikturn/logos-svelte` docs
+- **[Angular components](./packages/angular/README.md)** -- `@quikturn/logos-angular` docs
 - **[GitHub](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK)** -- source, issues, contributions
 
 ## License
