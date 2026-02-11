@@ -1,6 +1,6 @@
 {
   "name": "@quikturn/logos-angular",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Angular components for the Quikturn Logos API — standalone components with signal inputs",
   "license": "MIT",
   "author": "Quikturn",
@@ -28,7 +28,13 @@
     "url": "https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/issues"
   },
   "homepage": "https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/tree/main/packages/angular#readme",
-  "keywords": ["quikturn", "logos", "angular", "company-logos", "brand-assets"],
+  "keywords": [
+    "quikturn",
+    "logos",
+    "angular",
+    "company-logos",
+    "brand-assets"
+  ],
   "engines": {
     "node": ">=20"
   },
