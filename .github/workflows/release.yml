@@ -163,7 +163,7 @@ jobs:
   release-vue:
     name: Release @quikturn/logos-vue
     runs-on: ubuntu-latest
-    needs: release-core
+    needs: release-next
 
     steps:
       - name: Checkout
@@ -214,7 +214,7 @@ jobs:
   release-svelte:
     name: Release @quikturn/logos-svelte
     runs-on: ubuntu-latest
-    needs: release-core
+    needs: release-vue
 
     steps:
       - name: Checkout
@@ -265,7 +265,7 @@ jobs:
   release-angular:
     name: Release @quikturn/logos-angular
     runs-on: ubuntu-latest
-    needs: release-core
+    needs: release-svelte
 
     steps:
       - name: Checkout
