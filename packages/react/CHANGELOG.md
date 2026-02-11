@@ -1,3 +1,17 @@
+# [1.2.0](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/compare/react-v1.1.1...react-v1.2.0) (2026-02-11)
+
+
+### Bug Fixes
+
+* **ci:** sync downstream release jobs with latest main before publishing ([b7e803d](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/commit/b7e803dff351728108d343a8be154234c0671acc))
+
+
+### Features
+
+* add multi-framework support and improve documentation ([#10](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/issues/10)) ([6781b9c](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/commit/6781b9cc838e76635164ae3d3c6c887a68891566))
+* add multi-framework support and improve documentation ([#11](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/issues/11)) ([927b50e](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/commit/927b50e10bcbe57d791d42fe5a1453e36ceb8daf))
+* expand framework support and improve documentation ([#9](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/issues/9)) ([61ff746](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/commit/61ff746463acbfc72b7904451c11ac7c3639281b))
+
 ## [1.1.1](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/compare/react-v1.1.0...react-v1.1.1) (2026-02-11)
 
 
