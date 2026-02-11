@@ -143,5 +143,7 @@ export function useAnimationLoop(
       }
       lastTsRef.current = null;
     };
+    // trackRef is a stable React ref — only .current mutates
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [targetVelocity, seqWidth, seqHeight, isHovered, hoverSpeed, isVertical]);
 }

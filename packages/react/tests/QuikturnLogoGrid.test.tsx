@@ -120,4 +120,19 @@ describe("QuikturnLogoGrid", () => {
     expect(grid).not.toBeNull();
     expect((grid as HTMLElement).style.maxWidth).toBe("600px");
   });
+
+  it("does not render link for javascript: href in logos", () => {
+    render(
+      <QuikturnLogoGrid
+        logos={[
+          { domain: "github.com", href: "javascript:alert(1)" },
+          { domain: "stripe.com", href: "https://stripe.com" },
+        ]}
+      />,
+    );
+    const links = screen.getAllByRole("link");
+    // Only the valid href should produce a link
+    expect(links).toHaveLength(1);
+    expect(links[0]).toHaveAttribute("href", "https://stripe.com");
+  });
 });

@@ -5,6 +5,7 @@ export default defineConfig({
   format: ["esm", "cjs"],
   dts: true,
   treeshake: true,
+  clean: true,
   outDir: "dist",
   platform: "browser",
   external: ["react", "react-dom", "react/jsx-runtime", "@quikturn/logos"],

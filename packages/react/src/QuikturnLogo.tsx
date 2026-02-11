@@ -2,6 +2,7 @@ import { useEffect, useMemo } from "react";
 import { logoUrl } from "@quikturn/logos";
 import { useQuikturnContext } from "./context";
 import { fireBeacon } from "./beacon";
+import { isValidHref } from "./validate-href";
 import type { QuikturnLogoProps } from "./types";
 
 export function QuikturnLogo({
@@ -51,7 +52,7 @@ export function QuikturnLogo({
     />
   );
 
-  if (href) {
+  if (href && isValidHref(href)) {
     return (
       <a
         href={href}

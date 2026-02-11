@@ -444,9 +444,9 @@ describe("browserFetch", () => {
     fetchSpy.mockResolvedValueOnce(mockResponse(502, {}, "Bad Gateway"));
     try {
       await browserFetch("https://logos.getquikturn.io/x");
-    } catch (err: any) {
-      expect(err.code).toBe("UNEXPECTED_ERROR");
-      expect(err.status).toBe(502);
+    } catch (err) {
+      expect((err as LogoError).code).toBe("UNEXPECTED_ERROR");
+      expect((err as LogoError).status).toBe(502);
     }
   });
 

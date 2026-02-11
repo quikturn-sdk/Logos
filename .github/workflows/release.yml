@@ -99,3 +99,191 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: pnpm exec semantic-release
+
+  release-next:
+    name: Release @quikturn/logos-next
+    runs-on: ubuntu-latest
+    needs: release-react
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build (core)
+        run: pnpm run build
+
+      - name: Build (react)
+        working-directory: packages/react
+        run: pnpm run build
+
+      - name: Typecheck (next)
+        working-directory: packages/next
+        run: pnpm run typecheck
+
+      - name: Test (next)
+        working-directory: packages/next
+        run: pnpm run test
+
+      - name: Build (next)
+        working-directory: packages/next
+        run: pnpm run build
+
+      - name: Release (next)
+        working-directory: packages/next
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: pnpm exec semantic-release
+
+  release-vue:
+    name: Release @quikturn/logos-vue
+    runs-on: ubuntu-latest
+    needs: release-core
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build (core)
+        run: pnpm run build
+
+      - name: Typecheck (vue)
+        working-directory: packages/vue
+        run: pnpm run typecheck
+
+      - name: Test (vue)
+        working-directory: packages/vue
+        run: pnpm run test
+
+      - name: Build (vue)
+        working-directory: packages/vue
+        run: pnpm run build
+
+      - name: Release (vue)
+        working-directory: packages/vue
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: pnpm exec semantic-release
+
+  release-svelte:
+    name: Release @quikturn/logos-svelte
+    runs-on: ubuntu-latest
+    needs: release-core
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build (core)
+        run: pnpm run build
+
+      - name: Typecheck (svelte)
+        working-directory: packages/svelte
+        run: pnpm run typecheck
+
+      - name: Test (svelte)
+        working-directory: packages/svelte
+        run: pnpm run test
+
+      - name: Build (svelte)
+        working-directory: packages/svelte
+        run: pnpm run build
+
+      - name: Release (svelte)
+        working-directory: packages/svelte
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: pnpm exec semantic-release
+
+  release-angular:
+    name: Release @quikturn/logos-angular
+    runs-on: ubuntu-latest
+    needs: release-core
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build (core)
+        run: pnpm run build
+
+      - name: Typecheck (angular)
+        working-directory: packages/angular
+        run: pnpm run typecheck
+
+      - name: Test (angular)
+        working-directory: packages/angular
+        run: pnpm run test
+
+      - name: Build (angular)
+        working-directory: packages/angular
+        run: pnpm run build
+
+      - name: Release (angular)
+        working-directory: packages/angular
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: pnpm exec semantic-release

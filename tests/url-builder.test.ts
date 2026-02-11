@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 
 import { logoUrl } from "../src/url-builder";
 import { LogoError, DomainValidationError } from "../src/errors";
+import type { ThemeOption, SupportedOutputFormat } from "../src/types";
 
 // ---------------------------------------------------------------------------
 // Phase 2 - Universal URL Builder (RED phase)
@@ -108,8 +109,8 @@ describe("logoUrl", () => {
     });
 
     it("T2.14 - omits theme param when value is invalid", () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const url = logoUrl("x.com", { theme: "invalid" as any });
+       
+      const url = logoUrl("x.com", { theme: "invalid" as unknown as ThemeOption });
       expect(params(url).has("theme")).toBe(false);
     });
   });
@@ -139,8 +140,8 @@ describe("logoUrl", () => {
     });
 
     it("T2.19 - omits format param for unsupported format values", () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const url = logoUrl("x.com", { format: "image/gif" as any });
+       
+      const url = logoUrl("x.com", { format: "image/gif" as unknown as SupportedOutputFormat });
       expect(params(url).has("format")).toBe(false);
     });
   });

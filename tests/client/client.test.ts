@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
-import type { LogoMetadata, ScrapeProgressEvent } from "../../src/types";
+import type { LogoMetadata } from "../../src/types";
 
 // ---------------------------------------------------------------------------
 // Phase 4D - Browser Client Class (TDD)

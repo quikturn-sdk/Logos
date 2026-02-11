@@ -139,7 +139,7 @@ export async function handleScrapeResponse(
   let backoff = Math.min(Math.max(MIN_BACKOFF_MS, estimatedWaitMs), MAX_BACKOFF_MS);
   const startTime = Date.now();
 
-  // eslint-disable-next-line no-constant-condition
+   
   while (true) {
     // Check timeout BEFORE delay
     const elapsed = Date.now() - startTime;
@@ -155,7 +155,7 @@ export async function handleScrapeResponse(
     let pollResponse: Response;
     let retries = 0;
 
-    // eslint-disable-next-line no-constant-condition
+     
     while (true) {
       try {
         pollResponse = await fetchFn(pollUrl);

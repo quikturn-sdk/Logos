@@ -14,6 +14,7 @@ import {
   useImageLoader,
   useAnimationLoop,
 } from "./hooks";
+import { isValidHref } from "../validate-href";
 import type {
   QuikturnLogoCarouselProps,
   LogoConfig,
@@ -152,7 +153,7 @@ function DefaultLogoItem({
     />
   );
 
-  if (logo.href) {
+  if (logo.href && isValidHref(logo.href)) {
     return (
       <a
         href={logo.href}

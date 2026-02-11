@@ -310,7 +310,7 @@ describe("QuikturnLogos (server)", () => {
     });
 
     const client = new QuikturnLogos({ secretKey: "sk_test_123" });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     
     for await (const _result of client.getMany(["github.com"], {
       concurrency: 3,
     })) {

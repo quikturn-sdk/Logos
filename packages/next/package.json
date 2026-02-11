@@ -1,0 +1,80 @@
+{
+  "name": "@quikturn/logos-next",
+  "version": "0.1.0",
+  "description": "Next.js components for the Quikturn Logos API — QuikturnImage with next/image integration, server helpers",
+  "license": "MIT",
+  "author": "Quikturn",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": {
+        "import": "./dist/index.d.ts",
+        "require": "./dist/index.d.cts"
+      },
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./server": {
+      "types": {
+        "import": "./dist/server.d.ts",
+        "require": "./dist/server.d.cts"
+      },
+      "import": "./dist/server.mjs",
+      "require": "./dist/server.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK.git",
+    "directory": "packages/next"
+  },
+  "bugs": {
+    "url": "https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/issues"
+  },
+  "homepage": "https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/tree/main/packages/next#readme",
+  "keywords": ["quikturn", "logos", "next", "company-logos", "brand-assets"],
+  "engines": {
+    "node": ">=18"
+  },
+  "files": ["dist", "LICENSE", "README.md"],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/ tests/"
+  },
+  "dependencies": {
+    "@quikturn/logos": "workspace:^",
+    "@quikturn/logos-react": "workspace:^",
+    "server-only": "^0.0.1"
+  },
+  "peerDependencies": {
+    "next": "^14 || ^15",
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "jsdom": "^28.0.0",
+    "next": "^15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "semantic-release": "^25.0.3",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  }
+}

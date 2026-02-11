@@ -174,7 +174,7 @@ export async function browserFetch(
   // Track whether we have already retried a 500
   let serverErrorRetried = false;
 
-  // eslint-disable-next-line no-constant-condition
+   
   while (true) {
     let response: Response;
 
@@ -286,7 +286,7 @@ export async function browserFetch(
     }
 
     // ----- Other unexpected status codes -----
-    const body = await response.text();
+    await response.text();
     throw new LogoError(
       `Unexpected response: ${response.status}`,
       "UNEXPECTED_ERROR",

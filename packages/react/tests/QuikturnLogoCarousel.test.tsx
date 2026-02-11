@@ -177,4 +177,59 @@ describe("QuikturnLogoCarousel", () => {
     expect(links.length).toBeGreaterThanOrEqual(1);
     expect(links[0]).toHaveAttribute("href", "https://github.com");
   });
+
+  it("renders carousel with direction='right'", () => {
+    render(
+      <QuikturnLogoCarousel domains={TEST_DOMAINS} direction="right" />,
+    );
+    expect(screen.getByRole("region")).toBeInTheDocument();
+    const images = screen.getAllByRole("img");
+    expect(images.length).toBeGreaterThanOrEqual(TEST_DOMAINS.length);
+  });
+
+  it("renders carousel with direction='up'", () => {
+    render(
+      <QuikturnLogoCarousel domains={TEST_DOMAINS} direction="up" />,
+    );
+    const region = screen.getByRole("region") as HTMLElement;
+    expect(region).toBeInTheDocument();
+    // Vertical carousels have height: 100%
+    expect(region.style.height).toBe("100%");
+  });
+
+  it("renders carousel with direction='down'", () => {
+    render(
+      <QuikturnLogoCarousel domains={TEST_DOMAINS} direction="down" />,
+    );
+    const region = screen.getByRole("region") as HTMLElement;
+    expect(region).toBeInTheDocument();
+    expect(region.style.height).toBe("100%");
+  });
+
+  it("renders with empty domains array", () => {
+    render(<QuikturnLogoCarousel domains={[]} />);
+    expect(screen.getByRole("region")).toBeInTheDocument();
+    expect(screen.queryAllByRole("img")).toHaveLength(0);
+  });
+
+  it("cleans up animation frame on unmount", () => {
+    const cancelSpy = vi.spyOn(globalThis, "cancelAnimationFrame");
+    const { unmount } = render(
+      <QuikturnLogoCarousel domains={TEST_DOMAINS} />,
+    );
+    unmount();
+    expect(cancelSpy).toHaveBeenCalled();
+    cancelSpy.mockRestore();
+  });
+
+  it("validates href - rejects javascript: protocol", () => {
+    render(
+      <QuikturnLogoCarousel
+        logos={[{ domain: "github.com", href: "javascript:alert(1)" }]}
+      />,
+    );
+    expect(screen.queryAllByRole("link")).toHaveLength(0);
+    // Images should still render
+    expect(screen.getAllByRole("img").length).toBeGreaterThanOrEqual(1);
+  });
 });

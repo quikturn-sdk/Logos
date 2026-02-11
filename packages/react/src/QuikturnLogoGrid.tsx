@@ -2,6 +2,7 @@ import React, { useEffect, useMemo } from "react";
 import { logoUrl } from "@quikturn/logos";
 import { useQuikturnContext } from "./context";
 import { fireBeacon } from "./beacon";
+import { isValidHref } from "./validate-href";
 import type { QuikturnLogoGridProps, LogoConfig, ResolvedLogo } from "./types";
 
 export function QuikturnLogoGrid({
@@ -83,7 +84,7 @@ export function QuikturnLogoGrid({
               justifyContent: "center",
             }}
           >
-            {logo.href ? (
+            {logo.href && isValidHref(logo.href) ? (
               <a
                 href={logo.href}
                 target="_blank"

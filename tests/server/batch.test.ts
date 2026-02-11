@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { getMany } from "../../src/server/batch";
 import type { BatchResult } from "../../src/server/batch";
 import type { LogoMetadata } from "../../src/types";

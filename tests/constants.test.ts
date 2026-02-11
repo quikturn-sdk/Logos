@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 
+import type { SupportedOutputFormat } from "../src/types";
 import {
   DEFAULT_WIDTH,
   MAX_WIDTH,
@@ -58,10 +59,10 @@ describe("constants", () => {
     });
 
     it("T1.5 - SUPPORTED_FORMATS does not contain unsupported formats", () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect(SUPPORTED_FORMATS.has("image/gif" as any)).toBe(false);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect(SUPPORTED_FORMATS.has("image/svg+xml" as any)).toBe(false);
+       
+      expect(SUPPORTED_FORMATS.has("image/gif" as unknown as SupportedOutputFormat)).toBe(false);
+
+      expect(SUPPORTED_FORMATS.has("image/svg+xml" as unknown as SupportedOutputFormat)).toBe(false);
     });
 
     it("T1.6 - DEFAULT_FORMAT equals 'image/png'", () => {

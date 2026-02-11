@@ -1,0 +1,77 @@
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { fireBeacon, _resetBeacon } from "../src/lib/beacon";
+import { BASE_URL } from "@quikturn/logos";
+
+describe("fireBeacon", () => {
+  let imageSrcs: string[];
+
+  beforeEach(() => {
+    _resetBeacon();
+    imageSrcs = [];
+
+    // Mock Image constructor to capture src assignments
+    vi.stubGlobal(
+      "Image",
+      class MockImage {
+        private _src = "";
+        get src() {
+          return this._src;
+        }
+        set src(val: string) {
+          this._src = val;
+          imageSrcs.push(val);
+        }
+      },
+    );
+  });
+
+  it("fires beacon pixel with correct URL for a publishable token", () => {
+    fireBeacon("qt_test123");
+
+    expect(imageSrcs).toHaveLength(1);
+    expect(imageSrcs[0]).toContain(`${BASE_URL}/_beacon`);
+    expect(imageSrcs[0]).toContain("token=qt_test123");
+    expect(imageSrcs[0]).toContain("page=");
+  });
+
+  it("deduplicates by token: second call is a no-op", () => {
+    fireBeacon("qt_dup");
+    fireBeacon("qt_dup");
+
+    expect(imageSrcs).toHaveLength(1);
+  });
+
+  it("skips sk_ tokens (server secret keys)", () => {
+    fireBeacon("sk_secret_key");
+
+    expect(imageSrcs).toHaveLength(0);
+  });
+
+  it("skips empty token strings", () => {
+    fireBeacon("");
+
+    expect(imageSrcs).toHaveLength(0);
+  });
+
+  it("is SSR-safe: skips when typeof window is undefined", () => {
+    const origWindow = globalThis.window;
+    // @ts-expect-error - deliberately removing window for SSR test
+    delete globalThis.window;
+
+    try {
+      fireBeacon("qt_ssr");
+      expect(imageSrcs).toHaveLength(0);
+    } finally {
+      globalThis.window = origWindow;
+    }
+  });
+
+  it("_resetBeacon clears fired set so token can fire again", () => {
+    fireBeacon("qt_reset");
+    expect(imageSrcs).toHaveLength(1);
+
+    _resetBeacon();
+    fireBeacon("qt_reset");
+    expect(imageSrcs).toHaveLength(2);
+  });
+});

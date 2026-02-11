@@ -147,7 +147,7 @@ export async function* getMany(
    */
   async function processDomain(index: number, domain: string): Promise<void> {
     let rateLimitRetries = 0;
-    // eslint-disable-next-line no-constant-condition
+     
     while (true) {
       try {
         const { buffer, contentType, metadata } = await fetchFn(domain);

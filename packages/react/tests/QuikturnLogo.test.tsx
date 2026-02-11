@@ -114,4 +114,29 @@ describe("QuikturnLogo", () => {
       "format=webp",
     );
   });
+
+  it("does not render link for javascript: href", () => {
+    render(
+      <QuikturnLogo domain="github.com" href="javascript:alert(1)" />,
+    );
+    expect(screen.queryByRole("link")).toBeNull();
+    // img should still render
+    expect(screen.getByRole("img")).toBeInTheDocument();
+  });
+
+  it("does not render link for data: href", () => {
+    render(
+      <QuikturnLogo domain="github.com" href="data:text/html,<h1>bad</h1>" />,
+    );
+    expect(screen.queryByRole("link")).toBeNull();
+    expect(screen.getByRole("img")).toBeInTheDocument();
+  });
+
+  it("renders link for valid https href", () => {
+    render(
+      <QuikturnLogo domain="github.com" href="https://github.com" />,
+    );
+    const link = screen.getByRole("link");
+    expect(link).toHaveAttribute("href", "https://github.com");
+  });
 });

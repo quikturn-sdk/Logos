@@ -32,7 +32,6 @@ import type {
 import { logoUrl } from "../url-builder";
 import { parseLogoHeaders } from "../headers";
 import { serverFetch } from "./fetcher";
-import type { ServerFetcherOptions } from "./fetcher";
 import { getMany } from "./batch";
 import type { BatchOptions, BatchResult } from "./batch";
 import { handleScrapeResponse } from "../client/scrape-poller";

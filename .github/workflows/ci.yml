@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [20, 22, 24]
+        node-version: [18, 20, 22]
 
     steps:
       - name: Checkout
@@ -56,4 +56,56 @@ jobs:
 
       - name: Build (react)
         working-directory: packages/react
+        run: pnpm run build
+
+      # --- @quikturn/logos-next ---
+      - name: Typecheck (next)
+        working-directory: packages/next
+        run: pnpm run typecheck
+
+      - name: Test (next)
+        working-directory: packages/next
+        run: pnpm run test
+
+      - name: Build (next)
+        working-directory: packages/next
+        run: pnpm run build
+
+      # --- @quikturn/logos-vue ---
+      - name: Typecheck (vue)
+        working-directory: packages/vue
+        run: pnpm run typecheck
+
+      - name: Test (vue)
+        working-directory: packages/vue
+        run: pnpm run test
+
+      - name: Build (vue)
+        working-directory: packages/vue
+        run: pnpm run build
+
+      # --- @quikturn/logos-svelte ---
+      - name: Typecheck (svelte)
+        working-directory: packages/svelte
+        run: pnpm run typecheck
+
+      - name: Test (svelte)
+        working-directory: packages/svelte
+        run: pnpm run test
+
+      - name: Build (svelte)
+        working-directory: packages/svelte
+        run: pnpm run build
+
+      # --- @quikturn/logos-angular ---
+      - name: Typecheck (angular)
+        working-directory: packages/angular
+        run: pnpm run typecheck
+
+      - name: Test (angular)
+        working-directory: packages/angular
+        run: pnpm run test
+
+      - name: Build (angular)
+        working-directory: packages/angular
         run: pnpm run build
