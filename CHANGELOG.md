@@ -1,3 +1,10 @@
+## [0.7.2](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/compare/v0.7.1...v0.7.2) (2026-02-11)
+
+
+### Bug Fixes
+
+* **ci:** chain release jobs sequentially to prevent push races ([ad21261](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/commit/ad212615c0dd641188da239ef109cdcc4b73a4e9))
+
 ## [0.7.1](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/compare/v0.7.0...v0.7.1) (2026-02-11)
 
 
