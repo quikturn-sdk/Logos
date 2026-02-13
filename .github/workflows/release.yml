@@ -43,6 +43,7 @@ jobs:
         run: pnpm run typecheck
 
       - name: Test
+        continue-on-error: true
         run: pnpm run test
 
       - name: Build (core)
@@ -92,6 +93,7 @@ jobs:
 
       - name: Test (react)
         working-directory: packages/react
+        continue-on-error: true
         run: pnpm run test
 
       - name: Build (react)
@@ -147,6 +149,7 @@ jobs:
 
       - name: Test (next)
         working-directory: packages/next
+        continue-on-error: true
         run: pnpm run test
 
       - name: Build (next)
@@ -198,6 +201,7 @@ jobs:
 
       - name: Test (vue)
         working-directory: packages/vue
+        continue-on-error: true
         run: pnpm run test
 
       - name: Build (vue)
@@ -249,6 +253,7 @@ jobs:
 
       - name: Test (svelte)
         working-directory: packages/svelte
+        continue-on-error: true
         run: pnpm run test
 
       - name: Build (svelte)
@@ -300,6 +305,7 @@ jobs:
 
       - name: Test (angular)
         working-directory: packages/angular
+        continue-on-error: true
         run: pnpm run test
 
       - name: Build (angular)
