@@ -5,6 +5,9 @@ import {
   QuikturnLogoGrid,
 } from "@quikturn/logos-react";
 
+// Import the web component — auto-registers <quikturn-logo>
+import "@quikturn/logos/element";
+
 // ---------------------------------------------------------------------------
 // 1. Logo Wall (Marketing Page)
 // ---------------------------------------------------------------------------
@@ -147,7 +150,7 @@ function VerticalCarousel() {
 function SingleLogo() {
   return (
     <section style={sectionStyle}>
-      <h2 style={headingStyle}>5. Single Logo</h2>
+      <h2 style={headingStyle}>5. Single Logo (React)</h2>
       <p style={descStyle}>
         Standalone <code>&lt;QuikturnLogo&gt;</code> with custom size and
         format.
@@ -166,6 +169,36 @@ function SingleLogo() {
           href="https://figma.com"
         />
       </div>
+    </section>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 6. Web Component (<quikturn-logo> custom element)
+// ---------------------------------------------------------------------------
+
+function WebComponentDemo() {
+  return (
+    <section style={sectionStyle}>
+      <h2 style={headingStyle}>6. Web Component (No Framework)</h2>
+      <p style={descStyle}>
+        Native <code>&lt;quikturn-logo&gt;</code> custom element with shadow DOM
+        attribution badge. Works without any framework.
+      </p>
+      <div style={{ display: "flex", gap: 24, alignItems: "center", flexWrap: "wrap" }}>
+        {/* @ts-expect-error -- custom element attributes not in JSX.IntrinsicElements */}
+        <quikturn-logo domain="github.com" size="64"></quikturn-logo>
+        {/* @ts-expect-error -- custom element */}
+        <quikturn-logo domain="stripe.com" size="64"></quikturn-logo>
+        {/* @ts-expect-error -- custom element */}
+        <quikturn-logo domain="vercel.com" size="64" greyscale></quikturn-logo>
+        {/* @ts-expect-error -- custom element */}
+        <quikturn-logo domain="figma.com" size="64" theme="dark"></quikturn-logo>
+      </div>
+      <p style={{ ...descStyle, marginTop: 16 }}>
+        Each element above includes a "Powered by Quikturn" attribution badge
+        protected by shadow DOM with <code>!important</code> CSS rules.
+      </p>
     </section>
   );
 }
@@ -192,6 +225,7 @@ export function App() {
         </header>
 
         <SingleLogo />
+        <WebComponentDemo />
         <LogoWall />
         <PartnerGrid />
         <CustomCarousel />
