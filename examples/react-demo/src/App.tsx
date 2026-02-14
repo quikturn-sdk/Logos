@@ -8,6 +8,9 @@ import {
 // Import the web component — auto-registers <quikturn-logo>
 import "@quikturn/logos/element";
 
+// Set your publishable key via VITE_QUIKTURN_TOKEN env var or paste it here
+const TOKEN = import.meta.env.VITE_QUIKTURN_TOKEN ?? "";
+
 // ---------------------------------------------------------------------------
 // 1. Logo Wall (Marketing Page)
 // ---------------------------------------------------------------------------
@@ -187,13 +190,13 @@ function WebComponentDemo() {
       </p>
       <div style={{ display: "flex", gap: 24, alignItems: "center", flexWrap: "wrap" }}>
         {/* @ts-expect-error -- custom element attributes not in JSX.IntrinsicElements */}
-        <quikturn-logo domain="github.com" size="64"></quikturn-logo>
+        <quikturn-logo domain="github.com" token={TOKEN} size="64"></quikturn-logo>
         {/* @ts-expect-error -- custom element */}
-        <quikturn-logo domain="stripe.com" size="64"></quikturn-logo>
+        <quikturn-logo domain="stripe.com" token={TOKEN} size="64"></quikturn-logo>
         {/* @ts-expect-error -- custom element */}
-        <quikturn-logo domain="vercel.com" size="64" greyscale></quikturn-logo>
+        <quikturn-logo domain="vercel.com" token={TOKEN} size="64" greyscale></quikturn-logo>
         {/* @ts-expect-error -- custom element */}
-        <quikturn-logo domain="figma.com" size="64" theme="dark"></quikturn-logo>
+        <quikturn-logo domain="figma.com" token={TOKEN} size="64" theme="dark"></quikturn-logo>
       </div>
       <p style={{ ...descStyle, marginTop: 16 }}>
         Each element above includes a "Powered by Quikturn" attribution badge
@@ -209,7 +212,7 @@ function WebComponentDemo() {
 
 export function App() {
   return (
-    <QuikturnProvider token="">
+    <QuikturnProvider token={TOKEN}>
       <div style={appStyle}>
         <header style={headerStyle}>
           <h1 style={{ margin: 0, fontSize: 24 }}>
