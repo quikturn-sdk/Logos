@@ -22,6 +22,7 @@
 // --- Types (compile-time only) ---
 export type {
   ThemeOption,
+  LogoVariant,
   SupportedOutputFormat,
   FormatShorthand,
   LogoRequestOptions,

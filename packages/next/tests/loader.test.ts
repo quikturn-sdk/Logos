@@ -48,4 +48,11 @@ describe("createQuikturnImageLoader", () => {
 
     expect(url).toContain("theme=dark");
   });
+
+  it("includes variant option", () => {
+    const loader = createQuikturnImageLoader({ variant: "icon" });
+    const url = loader({ src: "github.com", width: 128 });
+
+    expect(url).toContain("variant=icon");
+  });
 });

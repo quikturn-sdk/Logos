@@ -136,6 +136,21 @@ describe("QuikturnImage", () => {
     expect(img.getAttribute("src")).toContain("theme=dark");
   });
 
+  it("passes variant option to loader", () => {
+    render(
+      <QuikturnImage
+        domain="github.com"
+        token="qt_abc"
+        width={128}
+        height={128}
+        alt="GitHub"
+        variant="icon"
+      />,
+    );
+    const img = screen.getByTestId("next-image");
+    expect(img.getAttribute("src")).toContain("variant=icon");
+  });
+
   it("generates correct alt text", () => {
     render(
       <QuikturnImage

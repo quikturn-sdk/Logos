@@ -115,6 +115,12 @@ describe("QuikturnLogo", () => {
     );
   });
 
+  it("applies variant to logoUrl", () => {
+    const { container } = render(<QuikturnLogo domain="x.com" token="qt_test" variant="icon" />);
+    const img = container.querySelector("img")!;
+    expect(img.src).toContain("variant=icon");
+  });
+
   it("does not render link for javascript: href", () => {
     render(
       <QuikturnLogo domain="github.com" href="javascript:alert(1)" />,

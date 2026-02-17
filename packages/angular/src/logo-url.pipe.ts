@@ -22,6 +22,7 @@ export class LogoUrlPipe implements PipeTransform {
       format: options?.format,
       greyscale: options?.greyscale,
       theme: options?.theme,
+      variant: options?.variant,
     });
   }
 }

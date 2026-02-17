@@ -42,6 +42,7 @@ const props = withDefaults(
     logoFormat: undefined,
     logoGreyscale: undefined,
     logoTheme: undefined,
+    logoVariant: undefined,
     renderItem: undefined,
     ariaLabel: "Company logos",
     token: undefined,
@@ -97,6 +98,7 @@ const resolvedLogos = computed<ResolvedLogo[]>(() => {
       format: item.format ?? props.logoFormat,
       greyscale: item.greyscale ?? props.logoGreyscale,
       theme: item.theme ?? props.logoTheme,
+      variant: item.variant ?? props.logoVariant,
       baseUrl: effectiveBaseUrl.value,
     }),
   }));

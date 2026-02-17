@@ -10,7 +10,7 @@
  * implementations.
  */
 
-import type { ThemeOption, SupportedOutputFormat, FormatShorthand, LogoMetadata } from "../types";
+import type { ThemeOption, LogoVariant, SupportedOutputFormat, FormatShorthand, LogoMetadata } from "../types";
 import { LogoError, RateLimitError } from "../errors";
 import { delay } from "../internal/delay";
 
@@ -39,6 +39,7 @@ export interface BatchOptions {
   greyscale?: boolean;
   theme?: ThemeOption;
   format?: SupportedOutputFormat | FormatShorthand;
+  variant?: LogoVariant;
   signal?: AbortSignal;
   continueOnError?: boolean;
 }

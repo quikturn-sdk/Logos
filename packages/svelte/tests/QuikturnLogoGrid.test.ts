@@ -120,6 +120,17 @@ describe("QuikturnLogoGrid", () => {
     expect(container.querySelector(".my-grid")).not.toBeNull();
   });
 
+  it("applies logoVariant to image srcs", () => {
+    render(QuikturnLogoGrid, {
+      props: {
+        domains: ["github.com"],
+        logoVariant: "icon",
+      },
+    });
+    const img = screen.getByRole("img") as HTMLImageElement;
+    expect(img.src).toContain("variant=icon");
+  });
+
   it("does not render link for javascript: href in logos", () => {
     render(QuikturnLogoGrid, {
       props: {

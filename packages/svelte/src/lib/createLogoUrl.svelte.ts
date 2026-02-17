@@ -18,6 +18,7 @@ export function createLogoUrl(
       format: opts?.format,
       greyscale: opts?.greyscale,
       theme: opts?.theme,
+      variant: opts?.variant,
     });
   });
   return {

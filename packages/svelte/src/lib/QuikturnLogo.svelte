@@ -14,6 +14,7 @@
     format,
     greyscale,
     theme,
+    variant,
     alt,
     href,
     class: className,
@@ -35,6 +36,7 @@
       format,
       greyscale,
       theme,
+      variant,
       baseUrl: effectiveBaseUrl,
     }),
   );

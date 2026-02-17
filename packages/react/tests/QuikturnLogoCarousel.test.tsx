@@ -222,6 +222,18 @@ describe("QuikturnLogoCarousel", () => {
     cancelSpy.mockRestore();
   });
 
+  it("applies logoVariant to all logos", () => {
+    render(
+      <QuikturnLogoCarousel
+        domains={["github.com"]}
+        token="qt_test"
+        logoVariant="icon"
+      />,
+    );
+    const img = screen.getAllByRole("img")[0] as HTMLImageElement;
+    expect(img.src).toContain("variant=icon");
+  });
+
   it("validates href - rejects javascript: protocol", () => {
     render(
       <QuikturnLogoCarousel

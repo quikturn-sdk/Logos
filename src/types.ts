@@ -30,6 +30,9 @@ export type TokenStatus = "active" | "suspended" | "revoked";
 /** Theme adjusts the gamma curve applied during image transformation. */
 export type ThemeOption = "light" | "dark";
 
+/** Logo variant: "full" for the standard logo, "icon" for the favicon/icon version. */
+export type LogoVariant = "full" | "icon";
+
 /** Full MIME-type output formats supported by the worker's image pipeline. */
 export type SupportedOutputFormat = "image/png" | "image/jpeg" | "image/webp" | "image/avif";
 
@@ -45,6 +48,7 @@ export type FormatShorthand = "png" | "jpeg" | "webp" | "avif";
  * - `greyscale`  — When true, applies saturation: 0 transformation. Default: false.
  * - `theme`      — "light" (gamma 0.9) or "dark" (gamma 1.12).
  * - `format`     — Output image format. Accepts full MIME type or shorthand. Default: "image/png".
+ * - `variant`    — "full" (default) for the standard logo, "icon" for the favicon/icon version.
  * - `baseUrl`    — Override the default API base URL. Useful for testing or proxied environments.
  */
 export interface LogoRequestOptions {
@@ -54,6 +58,7 @@ export interface LogoRequestOptions {
   greyscale?: boolean;
   theme?: ThemeOption;
   format?: SupportedOutputFormat | FormatShorthand;
+  variant?: LogoVariant;
   baseUrl?: string;
 }
 

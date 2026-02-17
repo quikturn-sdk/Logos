@@ -200,6 +200,17 @@ describe("QuikturnLogoCarousel", () => {
     expect(screen.queryAllByRole("img")).toHaveLength(0);
   });
 
+  it("applies logoVariant to image srcs", () => {
+    render(QuikturnLogoCarousel, {
+      props: {
+        domains: ["github.com"],
+        logoVariant: "icon",
+      },
+    });
+    const img = screen.getAllByRole("img")[0] as HTMLImageElement;
+    expect(img.src).toContain("variant=icon");
+  });
+
   it("does not render link for javascript: href", () => {
     render(QuikturnLogoCarousel, {
       props: {

@@ -167,6 +167,16 @@ describe("QuikturnLogoComponent", () => {
       expect(img.src).toContain("format=webp");
     });
 
+    it("applies variant to logoUrl", () => {
+      fixture = TestBed.createComponent(QuikturnLogoComponent);
+      fixture.componentRef.setInput("domain", "github.com");
+      fixture.componentRef.setInput("variant", "icon");
+      fixture.detectChanges();
+
+      const img = fixture.nativeElement.querySelector("img") as HTMLImageElement;
+      expect(img.src).toContain("variant=icon");
+    });
+
     it("does not render link for javascript: href", () => {
       fixture = TestBed.createComponent(QuikturnLogoComponent);
       fixture.componentRef.setInput("domain", "github.com");

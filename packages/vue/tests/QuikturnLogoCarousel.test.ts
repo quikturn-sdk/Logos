@@ -218,6 +218,14 @@ describe("QuikturnLogoCarousel", () => {
     expect(screen.getAllByRole("img").length).toBeGreaterThanOrEqual(1);
   });
 
+  it("applies logoVariant to image srcs", () => {
+    render(QuikturnLogoCarousel, {
+      props: { domains: ["github.com"], logoVariant: "icon" },
+    });
+    const img = screen.getAllByRole("img")[0] as HTMLImageElement;
+    expect(img.src).toContain("variant=icon");
+  });
+
   it("applies scale on hover when scaleOnHover is true", () => {
     render(QuikturnLogoCarousel, {
       props: { domains: ["github.com"], scaleOnHover: true },

@@ -196,6 +196,15 @@ describe("QuikturnLogoCarouselComponent", () => {
     expect(links[0].getAttribute("href")).toBe("https://github.com");
   });
 
+  it("applies logoVariant to image src", () => {
+    const fixture = createComponent({
+      domains: ["github.com"],
+      logoVariant: "icon",
+    });
+    const img = fixture.nativeElement.querySelector("img") as HTMLImageElement;
+    expect(img.src).toContain("variant=icon");
+  });
+
   it("works without provider (optional inject)", () => {
     const fixture = createComponent(
       { domains: ["github.com"], token: "qt_standalone" },

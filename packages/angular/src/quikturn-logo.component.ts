@@ -1,6 +1,6 @@
 import { Component, computed, inject, input, OnInit, output } from "@angular/core";
 import { logoUrl } from "@quikturn/logos";
-import type { SupportedOutputFormat, ThemeOption } from "@quikturn/logos";
+import type { SupportedOutputFormat, ThemeOption, LogoVariant } from "@quikturn/logos";
 import { QUIKTURN_CONFIG } from "./providers";
 import { fireBeacon } from "./beacon";
 import { isValidHref } from "./validate-href";
@@ -47,6 +47,9 @@ export class QuikturnLogoComponent implements OnInit {
   /** Theme option ("light" or "dark"). */
   theme = input<string | undefined>(undefined);
 
+  /** Logo variant ("full" or "icon"). */
+  variant = input<string | undefined>(undefined);
+
   /** Custom alt text for the image. Defaults to "${domain} logo". */
   alt = input<string | undefined>(undefined);
 
@@ -89,6 +92,7 @@ export class QuikturnLogoComponent implements OnInit {
       format: this.format() as SupportedOutputFormat | undefined,
       greyscale: this.greyscale(),
       theme: this.theme() as ThemeOption | undefined,
+      variant: this.variant() as LogoVariant | undefined,
       baseUrl: this.effectiveBaseUrl(),
     }),
   );

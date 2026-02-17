@@ -16,6 +16,7 @@ export function QuikturnLogoGrid({
   logoFormat,
   logoGreyscale,
   logoTheme,
+  logoVariant,
   renderItem,
   className,
   style,
@@ -38,6 +39,7 @@ export function QuikturnLogoGrid({
         format: item.format ?? logoFormat,
         greyscale: item.greyscale ?? logoGreyscale,
         theme: item.theme ?? logoTheme,
+        variant: item.variant ?? logoVariant,
         baseUrl: effectiveBaseUrl,
       }),
     }));
@@ -50,6 +52,7 @@ export function QuikturnLogoGrid({
     logoFormat,
     logoGreyscale,
     logoTheme,
+    logoVariant,
   ]);
 
   useEffect(() => {

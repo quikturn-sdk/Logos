@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, type CSSProperties, type VNode } from "vue";
 import { logoUrl } from "@quikturn/logos";
-import type { SupportedOutputFormat, ThemeOption } from "@quikturn/logos";
+import type { SupportedOutputFormat, ThemeOption, LogoVariant } from "@quikturn/logos";
 import { useQuikturnContext } from "../composables/useQuikturnContext";
 import { fireBeacon } from "../beacon";
 import { isValidHref } from "../validate-href";
@@ -19,6 +19,7 @@ const props = withDefaults(
     logoFormat?: string;
     logoGreyscale?: boolean;
     logoTheme?: string;
+    logoVariant?: string;
     renderItem?: (logo: ResolvedLogo, index: number) => VNode;
     class?: string;
     style?: CSSProperties;
@@ -44,6 +45,7 @@ const resolvedLogos = computed<ResolvedLogo[]>(() => {
       format: (item.format ?? props.logoFormat) as SupportedOutputFormat | undefined,
       greyscale: item.greyscale ?? props.logoGreyscale,
       theme: (item.theme ?? props.logoTheme) as ThemeOption | undefined,
+      variant: (item.variant ?? props.logoVariant) as LogoVariant | undefined,
       baseUrl: effectiveBaseUrl.value,
     }),
   }));

@@ -144,6 +144,16 @@ describe("QuikturnLogoGridComponent", () => {
       expect(gridDiv.getAttribute("aria-label")).toBe("Company logos");
     });
 
+    it("applies logoVariant to image src", () => {
+      fixture = TestBed.createComponent(QuikturnLogoGridComponent);
+      fixture.componentRef.setInput("domains", ["github.com"]);
+      fixture.componentRef.setInput("logoVariant", "icon");
+      fixture.detectChanges();
+
+      const img = fixture.nativeElement.querySelector("img") as HTMLImageElement;
+      expect(img.src).toContain("variant=icon");
+    });
+
     it("does not render link for javascript: href in logos", () => {
       fixture = TestBed.createComponent(QuikturnLogoGridComponent);
       fixture.componentRef.setInput("logos", [

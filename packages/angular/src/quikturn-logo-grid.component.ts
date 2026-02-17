@@ -9,7 +9,7 @@ import {
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { logoUrl } from "@quikturn/logos";
-import type { SupportedOutputFormat, ThemeOption } from "@quikturn/logos";
+import type { SupportedOutputFormat, ThemeOption, LogoVariant } from "@quikturn/logos";
 import { QUIKTURN_CONFIG } from "./providers";
 import { fireBeacon } from "./beacon";
 import { isValidHref } from "./validate-href";
@@ -100,6 +100,9 @@ export class QuikturnLogoGridComponent implements OnInit {
   /** Default theme applied to all logos. */
   logoTheme = input<string | undefined>(undefined);
 
+  /** Default logo variant applied to all logos ("full" or "icon"). */
+  logoVariant = input<string | undefined>(undefined);
+
   /** CSS class applied to the grid container. */
   cssClass = input<string | undefined>(undefined, { alias: "class" });
 
@@ -134,6 +137,7 @@ export class QuikturnLogoGridComponent implements OnInit {
         format: (item.format ?? this.logoFormat()) as SupportedOutputFormat | undefined,
         greyscale: item.greyscale ?? this.logoGreyscale(),
         theme: (item.theme ?? this.logoTheme()) as ThemeOption | undefined,
+        variant: (item.variant ?? this.logoVariant()) as LogoVariant | undefined,
         baseUrl: this.effectiveBaseUrl(),
       }),
     }));

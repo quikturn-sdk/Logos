@@ -200,6 +200,15 @@ describe("Phase 7B: <quikturn-logo> Web Component", () => {
     document.body.removeChild(el);
   });
 
+  // E.26 - variant attribute passed to logoUrl()
+  it("E.26 - variant attribute passed to logoUrl", async () => {
+    await getQuikturnLogo();
+    const el = appendAndGet({ domain: "github.com", variant: "icon" });
+    const img = el.shadowRoot!.querySelector("img")!;
+    expect(img.src).toContain("variant=icon");
+    document.body.removeChild(el);
+  });
+
   // E.17 - Shadow DOM contains <style> with !important rules
   it("E.17 - shadow DOM contains style with !important", async () => {
     await getQuikturnLogo();
@@ -277,8 +286,8 @@ describe("Phase 7B: <quikturn-logo> Web Component", () => {
     expect(imageSrcs).toHaveLength(1);
   });
 
-  // E.25 - observedAttributes includes all 6 attribute names
-  it("E.25 - observedAttributes includes all 6 names", async () => {
+  // E.25 - observedAttributes includes all 7 attribute names
+  it("E.25 - observedAttributes includes all 7 names", async () => {
     const QuikturnLogo = await getQuikturnLogo();
     const attrs = QuikturnLogo.observedAttributes;
     expect(attrs).toContain("domain");
@@ -287,6 +296,7 @@ describe("Phase 7B: <quikturn-logo> Web Component", () => {
     expect(attrs).toContain("format");
     expect(attrs).toContain("greyscale");
     expect(attrs).toContain("theme");
-    expect(attrs).toHaveLength(6);
+    expect(attrs).toContain("variant");
+    expect(attrs).toHaveLength(7);
   });
 });

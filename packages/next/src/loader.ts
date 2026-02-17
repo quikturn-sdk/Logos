@@ -24,6 +24,7 @@ export interface QuikturnImageLoaderOptions {
   format?: LogoRequestOptions["format"];
   greyscale?: boolean;
   theme?: LogoRequestOptions["theme"];
+  variant?: LogoRequestOptions["variant"];
   baseUrl?: string;
 }
 
@@ -72,6 +73,7 @@ export function createQuikturnImageLoader(
       format: options.format,
       greyscale: options.greyscale,
       theme: options.theme,
+      variant: options.variant,
       baseUrl: options.baseUrl,
     });
 }

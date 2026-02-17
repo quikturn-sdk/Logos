@@ -26,6 +26,7 @@ export function injectLogoUrl(options: {
   format?: () => string | undefined;
   greyscale?: () => boolean | undefined;
   theme?: () => string | undefined;
+  variant?: () => string | undefined;
 }): Signal<string> {
   assertInInjectionContext(injectLogoUrl);
 
@@ -48,6 +49,7 @@ export function injectLogoUrl(options: {
         : never,
       greyscale: options.greyscale?.(),
       theme: options.theme?.() as "light" | "dark" | undefined,
+      variant: options.variant?.() as "full" | "icon" | undefined,
     });
   });
 }

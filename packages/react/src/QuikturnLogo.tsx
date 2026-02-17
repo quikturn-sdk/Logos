@@ -13,6 +13,7 @@ export function QuikturnLogo({
   format,
   greyscale,
   theme,
+  variant,
   alt,
   href,
   className,
@@ -33,9 +34,10 @@ export function QuikturnLogo({
         format,
         greyscale,
         theme,
+        variant,
         baseUrl: effectiveBaseUrl,
       }),
-    [domain, effectiveToken, effectiveBaseUrl, size, format, greyscale, theme],
+    [domain, effectiveToken, effectiveBaseUrl, size, format, greyscale, theme, variant],
   );
 
   useEffect(() => {

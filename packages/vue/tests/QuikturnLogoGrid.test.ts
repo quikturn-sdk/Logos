@@ -128,6 +128,14 @@ describe("QuikturnLogoGrid", () => {
     expect((grid as HTMLElement).style.maxWidth).toBe("600px");
   });
 
+  it("applies logoVariant to image srcs", () => {
+    render(QuikturnLogoGrid, {
+      props: { domains: ["github.com"], logoVariant: "icon" },
+    });
+    const img = screen.getByRole("img") as HTMLImageElement;
+    expect(img.src).toContain("variant=icon");
+  });
+
   it("does not render link for javascript: href in logos", () => {
     render(QuikturnLogoGrid, {
       props: {

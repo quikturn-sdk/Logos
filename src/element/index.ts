@@ -23,7 +23,7 @@ import { STYLES } from "./styles";
  */
 export class QuikturnLogo extends HTMLElement {
   static get observedAttributes(): string[] {
-    return ["domain", "token", "size", "format", "greyscale", "theme"];
+    return ["domain", "token", "size", "format", "greyscale", "theme", "variant"];
   }
 
   private _beaconFired = false;
@@ -88,6 +88,7 @@ export class QuikturnLogo extends HTMLElement {
     const format = this.getAttribute("format");
     const greyscale = this.hasAttribute("greyscale");
     const theme = this.getAttribute("theme");
+    const variant = this.getAttribute("variant");
 
     // Build the container
     const container = document.createElement("div");
@@ -104,6 +105,7 @@ export class QuikturnLogo extends HTMLElement {
       format: format as LogoRequestOptions["format"],
       greyscale,
       theme: theme as "light" | "dark" | undefined,
+      variant: variant as "full" | "icon" | undefined,
     });
     container.appendChild(img);
 

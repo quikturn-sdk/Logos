@@ -12,7 +12,7 @@ import {
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { logoUrl } from "@quikturn/logos";
-import type { SupportedOutputFormat, ThemeOption } from "@quikturn/logos";
+import type { SupportedOutputFormat, ThemeOption, LogoVariant } from "@quikturn/logos";
 import { QUIKTURN_CONFIG } from "./providers";
 import { fireBeacon } from "./beacon";
 import type { LogoConfig, ResolvedLogo } from "./types";
@@ -248,6 +248,9 @@ export class QuikturnLogoCarouselComponent
   /** Default theme option. */
   logoTheme = input<string | undefined>(undefined);
 
+  /** Default logo variant option ("full" or "icon"). */
+  logoVariant = input<string | undefined>(undefined);
+
   /** CSS class to apply to the root element. */
   cssClass = input<string | undefined>(undefined, { alias: "class" });
 
@@ -309,6 +312,7 @@ export class QuikturnLogoCarouselComponent
         format: (item.format ?? this.logoFormat()) as SupportedOutputFormat | undefined,
         greyscale: item.greyscale ?? this.logoGreyscale(),
         theme: (item.theme ?? this.logoTheme()) as ThemeOption | undefined,
+        variant: (item.variant ?? this.logoVariant()) as LogoVariant | undefined,
         baseUrl: this.effectiveBaseUrl(),
       }),
     }));

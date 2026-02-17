@@ -35,6 +35,7 @@
     logoFormat,
     logoGreyscale,
     logoTheme,
+    logoVariant,
     renderItem,
     class: className,
     style,
@@ -68,6 +69,7 @@
         format: item.format ?? logoFormat,
         greyscale: item.greyscale ?? logoGreyscale,
         theme: item.theme ?? logoTheme,
+        variant: item.variant ?? logoVariant,
         baseUrl: effectiveBaseUrl,
       }),
     }));

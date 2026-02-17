@@ -1,4 +1,4 @@
-import type { SupportedOutputFormat, FormatShorthand, ThemeOption } from "@quikturn/logos";
+import type { SupportedOutputFormat, FormatShorthand, ThemeOption, LogoVariant } from "@quikturn/logos";
 
 /** Configuration for provideQuikturnLogos(). */
 export interface QuikturnConfig {
@@ -12,6 +12,7 @@ export interface LogoOptions {
   format?: SupportedOutputFormat | FormatShorthand;
   greyscale?: boolean;
   theme?: ThemeOption;
+  variant?: LogoVariant;
 }
 
 /** Per-logo configuration in carousel/grid components. */
@@ -38,6 +39,7 @@ export interface QuikturnLogoInputs {
   format?: string;
   greyscale?: boolean;
   theme?: string;
+  variant?: string;
   alt?: string;
   href?: string;
   class?: string;
@@ -56,6 +58,7 @@ export interface QuikturnLogoGridInputs {
   logoFormat?: string;
   logoGreyscale?: boolean;
   logoTheme?: string;
+  logoVariant?: string;
   class?: string;
   ariaLabel?: string;
 }
@@ -80,6 +83,7 @@ export interface QuikturnLogoCarouselInputs {
   logoFormat?: string;
   logoGreyscale?: boolean;
   logoTheme?: string;
+  logoVariant?: string;
   class?: string;
   ariaLabel?: string;
 }

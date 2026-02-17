@@ -17,6 +17,7 @@
     logoFormat,
     logoGreyscale,
     logoTheme,
+    logoVariant,
     renderItem,
     class: className,
     ariaLabel = "Company logos",
@@ -40,6 +41,7 @@
         format: item.format ?? logoFormat,
         greyscale: item.greyscale ?? logoGreyscale,
         theme: item.theme ?? logoTheme,
+        variant: item.variant ?? logoVariant,
         baseUrl: effectiveBaseUrl,
       }),
     }));

@@ -1,4 +1,4 @@
-import type { SupportedOutputFormat, FormatShorthand, ThemeOption } from "@quikturn/logos";
+import type { SupportedOutputFormat, FormatShorthand, ThemeOption, LogoVariant } from "@quikturn/logos";
 
 /** Options that control logo image generation. */
 export interface LogoOptions {
@@ -6,6 +6,7 @@ export interface LogoOptions {
   format?: SupportedOutputFormat | FormatShorthand;
   greyscale?: boolean;
   theme?: ThemeOption;
+  variant?: LogoVariant;
 }
 
 /** Per-logo configuration in carousel/grid components. */
@@ -57,6 +58,7 @@ export interface QuikturnLogoCarouselProps {
   logoFormat?: SupportedOutputFormat | FormatShorthand;
   logoGreyscale?: boolean;
   logoTheme?: ThemeOption;
+  logoVariant?: LogoVariant;
   renderItem?: (logo: ResolvedLogo, index: number) => React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
@@ -75,6 +77,7 @@ export interface QuikturnLogoGridProps {
   logoFormat?: SupportedOutputFormat | FormatShorthand;
   logoGreyscale?: boolean;
   logoTheme?: ThemeOption;
+  logoVariant?: LogoVariant;
   renderItem?: (logo: ResolvedLogo, index: number) => React.ReactNode;
   className?: string;
   style?: React.CSSProperties;

@@ -22,6 +22,8 @@ export interface QuikturnImageProps
   greyscale?: boolean;
   /** Theme adjustment ("light" or "dark"). */
   theme?: LogoRequestOptions["theme"];
+  /** Logo variant ("full" or "icon"). */
+  variant?: LogoRequestOptions["variant"];
 }
 
 /**
@@ -42,6 +44,7 @@ export function QuikturnImage({
   format,
   greyscale,
   theme,
+  variant,
   alt,
   ...imageProps
 }: QuikturnImageProps) {
@@ -58,8 +61,9 @@ export function QuikturnImage({
           format,
           greyscale,
           theme,
+          variant,
         }),
-    [effectiveToken, format, greyscale, theme],
+    [effectiveToken, format, greyscale, theme, variant],
   );
 
   // Fire attribution beacon on mount (skipped for sk_ tokens and SSR)

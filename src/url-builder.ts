@@ -220,6 +220,7 @@ export function logoUrl(domain: string, options?: LogoRequestOptions): string {
     greyscale,
     theme,
     format,
+    variant,
     baseUrl,
   } = options ?? {};
 
@@ -263,6 +264,10 @@ export function logoUrl(domain: string, options?: LogoRequestOptions): string {
 
   if (resolvedFormat !== undefined) {
     url.searchParams.set("format", resolvedFormat);
+  }
+
+  if (variant === "icon") {
+    url.searchParams.set("variant", "icon");
   }
 
   url.searchParams.set("autoScrape", "true");

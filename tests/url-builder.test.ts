@@ -147,6 +147,26 @@ describe("logoUrl", () => {
   });
 
   // -----------------------------------------------------------------------
+  // Variant (T2.23 - T2.25)
+  // -----------------------------------------------------------------------
+  describe("variant option", () => {
+    it("T2.23 - includes variant=icon when variant is 'icon'", () => {
+      const url = logoUrl("x.com", { variant: "icon" });
+      expect(params(url).get("variant")).toBe("icon");
+    });
+
+    it("T2.24 - omits variant param when variant is 'full' (default)", () => {
+      const url = logoUrl("x.com", { variant: "full" });
+      expect(params(url).has("variant")).toBe(false);
+    });
+
+    it("T2.25 - omits variant param when undefined", () => {
+      const url = logoUrl("x.com");
+      expect(params(url).has("variant")).toBe(false);
+    });
+  });
+
+  // -----------------------------------------------------------------------
   // AutoScrape (T2.20) — always enabled
   // -----------------------------------------------------------------------
   describe("autoScrape", () => {

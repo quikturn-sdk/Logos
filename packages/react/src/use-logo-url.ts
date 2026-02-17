@@ -20,7 +20,8 @@ export function useLogoUrl(
         format: options?.format,
         greyscale: options?.greyscale,
         theme: options?.theme,
+        variant: options?.variant,
       }),
-    [domain, token, baseUrl, options?.size, options?.format, options?.greyscale, options?.theme],
+    [domain, token, baseUrl, options?.size, options?.format, options?.greyscale, options?.theme, options?.variant],
   );
 }

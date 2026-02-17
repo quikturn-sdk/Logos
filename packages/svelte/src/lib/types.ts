@@ -1,4 +1,4 @@
-import type { SupportedOutputFormat, FormatShorthand, ThemeOption } from "@quikturn/logos";
+import type { SupportedOutputFormat, FormatShorthand, ThemeOption, LogoVariant } from "@quikturn/logos";
 import type { Snippet } from "svelte";
 
 /** Options that control logo image generation. */
@@ -7,6 +7,7 @@ export interface LogoOptions {
   format?: SupportedOutputFormat | FormatShorthand;
   greyscale?: boolean;
   theme?: ThemeOption;
+  variant?: LogoVariant;
 }
 
 /** Per-logo configuration in carousel/grid components. */
@@ -58,6 +59,7 @@ export interface QuikturnLogoCarouselProps {
   logoFormat?: SupportedOutputFormat | FormatShorthand;
   logoGreyscale?: boolean;
   logoTheme?: ThemeOption;
+  logoVariant?: LogoVariant;
   renderItem?: Snippet<[ResolvedLogo, number]>;
   class?: string;
   style?: string;
@@ -76,6 +78,7 @@ export interface QuikturnLogoGridProps {
   logoFormat?: SupportedOutputFormat | FormatShorthand;
   logoGreyscale?: boolean;
   logoTheme?: ThemeOption;
+  logoVariant?: LogoVariant;
   renderItem?: Snippet<[ResolvedLogo, number]>;
   class?: string;
   ariaLabel?: string;

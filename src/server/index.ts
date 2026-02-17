@@ -24,6 +24,7 @@
 import type {
   ServerLogoResponse,
   ThemeOption,
+  LogoVariant,
   SupportedOutputFormat,
   FormatShorthand,
   ScrapeProgressEvent,
@@ -73,6 +74,7 @@ export interface ServerGetOptions {
   greyscale?: boolean;
   theme?: ThemeOption;
   format?: SupportedOutputFormat | FormatShorthand;
+  variant?: LogoVariant;
   scrapeTimeout?: number;
   onScrapeProgress?: (event: ScrapeProgressEvent) => void;
   signal?: AbortSignal;
@@ -145,6 +147,7 @@ export class QuikturnLogos {
       greyscale: options?.greyscale,
       theme: options?.theme,
       format: options?.format,
+      variant: options?.variant,
       baseUrl: this.baseUrl,
     });
 
@@ -240,6 +243,7 @@ export class QuikturnLogos {
         greyscale: options?.greyscale,
         theme: options?.theme,
         format: options?.format,
+        variant: options?.variant,
         signal: options?.signal,
       });
       return result;
@@ -281,6 +285,7 @@ export class QuikturnLogos {
       greyscale: options?.greyscale,
       theme: options?.theme,
       format: options?.format,
+      variant: options?.variant,
       baseUrl: this.baseUrl,
     });
 
@@ -328,6 +333,7 @@ export class QuikturnLogos {
       greyscale: options?.greyscale,
       theme: options?.theme,
       format: options?.format,
+      variant: options?.variant,
       baseUrl: this.baseUrl,
     });
   }

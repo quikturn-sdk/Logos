@@ -125,6 +125,13 @@ describe("QuikturnLogo", () => {
     expect(screen.getByRole("img").getAttribute("src")).toContain("format=webp");
   });
 
+  it("applies variant to logoUrl", () => {
+    render(QuikturnLogo, {
+      props: { domain: "github.com", variant: "icon" },
+    });
+    expect(screen.getByRole("img").getAttribute("src")).toContain("variant=icon");
+  });
+
   it("does not render link for javascript: href", () => {
     render(QuikturnLogo, {
       props: { domain: "github.com", href: "javascript:alert(1)" },

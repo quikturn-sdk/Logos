@@ -206,6 +206,7 @@ export const QuikturnLogoCarousel = React.memo<QuikturnLogoCarouselProps>(
     logoFormat,
     logoGreyscale,
     logoTheme,
+    logoVariant,
     renderItem,
     className,
     style,
@@ -240,6 +241,7 @@ export const QuikturnLogoCarousel = React.memo<QuikturnLogoCarouselProps>(
           format: item.format ?? logoFormat,
           greyscale: item.greyscale ?? logoGreyscale,
           theme: item.theme ?? logoTheme,
+          variant: item.variant ?? logoVariant,
           baseUrl: effectiveBaseUrl,
         }),
       }));
@@ -252,6 +254,7 @@ export const QuikturnLogoCarousel = React.memo<QuikturnLogoCarouselProps>(
       logoFormat,
       logoGreyscale,
       logoTheme,
+      logoVariant,
     ]);
 
     // Beacon
