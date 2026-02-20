@@ -301,7 +301,7 @@ import { logoUrl } from "@quikturn/logos";
 | `greyscale` | `boolean` | `false` | Desaturation filter |
 | `theme` | `"light" \| "dark"` | -- | Background-optimized rendering |
 | `format` | `string` | `"image/png"` | `"png"`, `"jpeg"`, `"webp"`, `"avif"` (or full MIME type) |
-| `baseUrl` | `string` | `"https://logos.getquikturn.io"` | API base URL override |
+
 
 **Returns:** `string` | **Throws:** `DomainValidationError`
 
@@ -318,7 +318,7 @@ import { QuikturnLogos } from "@quikturn/logos/client";
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `token` | `string` | **required** | Publishable key (`qt_`/`pk_` prefix) |
-| `baseUrl` | `string` | `"https://logos.getquikturn.io"` | API base URL override |
+
 | `maxRetries` | `number` | `2` | Max retries for 429/5xx responses |
 
 #### Methods
@@ -356,7 +356,7 @@ import { QuikturnLogos } from "@quikturn/logos/server";
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `secretKey` | `string` | **required** | Secret key (`sk_` prefix) |
-| `baseUrl` | `string` | `"https://logos.getquikturn.io"` | API base URL override |
+
 | `maxRetries` | `number` | `2` | Max retries for 429/5xx responses |
 
 #### Methods
@@ -459,15 +459,6 @@ import type {
 ---
 
 ## Configuration
-
-### Custom Base URL
-
-```ts
-const client = new QuikturnLogos({
-  token: "qt_your_key",
-  baseUrl: "https://logos-proxy.your-company.com",
-});
-```
 
 ### Formats
 
