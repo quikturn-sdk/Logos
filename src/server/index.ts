@@ -75,6 +75,7 @@ export interface ServerGetOptions {
   theme?: ThemeOption;
   format?: SupportedOutputFormat | FormatShorthand;
   variant?: LogoVariant;
+  autoScrape?: boolean;
   scrapeTimeout?: number;
   onScrapeProgress?: (event: ScrapeProgressEvent) => void;
   signal?: AbortSignal;
@@ -148,6 +149,7 @@ export class QuikturnLogos {
       theme: options?.theme,
       format: options?.format,
       variant: options?.variant,
+      autoScrape: options?.autoScrape,
       baseUrl: this.baseUrl,
     });
 
@@ -244,6 +246,7 @@ export class QuikturnLogos {
         theme: options?.theme,
         format: options?.format,
         variant: options?.variant,
+        autoScrape: options?.autoScrape,
         signal: options?.signal,
       });
       return result;
@@ -286,6 +289,7 @@ export class QuikturnLogos {
       theme: options?.theme,
       format: options?.format,
       variant: options?.variant,
+      autoScrape: options?.autoScrape,
       baseUrl: this.baseUrl,
     });
 
@@ -334,6 +338,7 @@ export class QuikturnLogos {
       theme: options?.theme,
       format: options?.format,
       variant: options?.variant,
+      autoScrape: options?.autoScrape,
       baseUrl: this.baseUrl,
     });
   }

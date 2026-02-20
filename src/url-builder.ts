@@ -221,6 +221,7 @@ export function logoUrl(domain: string, options?: LogoRequestOptions): string {
     theme,
     format,
     variant,
+    autoScrape,
     baseUrl,
   } = options ?? {};
 
@@ -270,7 +271,9 @@ export function logoUrl(domain: string, options?: LogoRequestOptions): string {
     url.searchParams.set("variant", "icon");
   }
 
-  url.searchParams.set("autoScrape", "true");
+  if (autoScrape === true) {
+    url.searchParams.set("autoScrape", "true");
+  }
 
   return url.toString();
 }

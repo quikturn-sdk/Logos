@@ -40,6 +40,7 @@ export interface BatchOptions {
   theme?: ThemeOption;
   format?: SupportedOutputFormat | FormatShorthand;
   variant?: LogoVariant;
+  autoScrape?: boolean;
   signal?: AbortSignal;
   continueOnError?: boolean;
 }

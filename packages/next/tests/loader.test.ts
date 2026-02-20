@@ -7,7 +7,7 @@ describe("quikturnImageLoader", () => {
 
     expect(url).toContain("github.com");
     expect(url).toContain("size=256");
-    expect(url).toContain("autoScrape=true");
+    expect(url).not.toContain("autoScrape");
   });
 
   it("uses default width (128) when width matches default", () => {
@@ -16,7 +16,7 @@ describe("quikturnImageLoader", () => {
     // url-builder omits size= when it equals DEFAULT_WIDTH (128)
     expect(url).not.toContain("size=");
     expect(url).toContain("github.com");
-    expect(url).toContain("autoScrape=true");
+    expect(url).not.toContain("autoScrape");
   });
 });
 

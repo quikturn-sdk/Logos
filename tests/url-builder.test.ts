@@ -25,9 +25,9 @@ describe("logoUrl", () => {
   // Basic URL generation (T2.1 - T2.4)
   // -----------------------------------------------------------------------
   describe("basic URL generation", () => {
-    it("T2.1 - returns base URL with domain path and autoScrape when called with domain only", () => {
+    it("T2.1 - returns base URL with domain path when called with domain only", () => {
       const url = logoUrl("google.com");
-      expect(url).toBe("https://logos.getquikturn.io/google.com?autoScrape=true");
+      expect(url).toBe("https://logos.getquikturn.io/google.com");
     });
 
     it("T2.2 - includes token as query parameter", () => {
@@ -167,12 +167,22 @@ describe("logoUrl", () => {
   });
 
   // -----------------------------------------------------------------------
-  // AutoScrape (T2.20) — always enabled
+  // AutoScrape (T2.20 - T2.21) — opt-in, defaults to false
   // -----------------------------------------------------------------------
-  describe("autoScrape", () => {
-    it("T2.20 - always includes autoScrape=true", () => {
+  describe("autoScrape option", () => {
+    it("T2.20 - omits autoScrape param by default", () => {
       const url = logoUrl("x.com");
+      expect(params(url).has("autoScrape")).toBe(false);
+    });
+
+    it("T2.21 - includes autoScrape=true when explicitly enabled", () => {
+      const url = logoUrl("x.com", { autoScrape: true });
       expect(params(url).get("autoScrape")).toBe("true");
+    });
+
+    it("T2.21b - omits autoScrape when explicitly set to false", () => {
+      const url = logoUrl("x.com", { autoScrape: false });
+      expect(params(url).has("autoScrape")).toBe(false);
     });
   });
 
@@ -195,7 +205,7 @@ describe("logoUrl", () => {
       expect(p.get("greyscale")).toBe("1");
       expect(p.get("theme")).toBe("dark");
       expect(p.get("format")).toBe("webp");
-      expect(p.get("autoScrape")).toBe("true");
+      expect(p.has("autoScrape")).toBe(false);
 
       // Verify the base path is correct
       const parsed = new URL(url);
