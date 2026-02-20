@@ -498,7 +498,11 @@ Rate limits and monthly quotas are enforced server-side and vary by plan. The SD
 - **[Vue components](./packages/vue/README.md)** -- `@quikturn/logos-vue` docs
 - **[Svelte components](./packages/svelte/README.md)** -- `@quikturn/logos-svelte` docs
 - **[Angular components](./packages/angular/README.md)** -- `@quikturn/logos-angular` docs
-- **[GitHub](https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK)** -- source, issues, contributions
+- **[GitHub](https://github.com/quikturn-sdk/Logos)** -- source, issues, contributions
+
+## Contributing
+
+We welcome, appreciate, and applaud all contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for setup instructions and guidelines.
 
 ## License
 
