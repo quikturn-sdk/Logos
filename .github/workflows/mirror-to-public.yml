@@ -12,6 +12,7 @@ concurrency:
 jobs:
   mirror:
     name: Push to public repo
+    if: github.repository != 'quikturn-sdk/Logos'
     runs-on: ubuntu-latest
 
     steps:
@@ -27,6 +28,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Remove internal-only directories from history
         run: |
@@ -37,6 +39,16 @@ jobs:
             --path .claude/ \
             --path .qodo/ \
             --force
+
+      - name: Validate token
+        env:
+          APP_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          if [ -z "${APP_TOKEN}" ]; then
+            echo "::error::GitHub App token is empty — check that the app is installed on quikturn-sdk org and secrets are set"
+            exit 1
+          fi
+          echo "Token generated successfully (length: ${#APP_TOKEN})"
 
       - name: Push to public repo
         env:

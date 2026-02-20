@@ -18,6 +18,7 @@ concurrency:
 jobs:
   release-core:
     name: Release @quikturn/logos
+    if: github.repository == 'quikturn-sdk/Logos'
     runs-on: ubuntu-latest
 
     steps:
@@ -57,6 +58,7 @@ jobs:
 
   release-react:
     name: Release @quikturn/logos-react
+    if: github.repository == 'quikturn-sdk/Logos'
     runs-on: ubuntu-latest
     needs: release-core
 
@@ -104,6 +106,7 @@ jobs:
 
   release-next:
     name: Release @quikturn/logos-next
+    if: github.repository == 'quikturn-sdk/Logos'
     runs-on: ubuntu-latest
     needs: release-core
 
@@ -155,6 +158,7 @@ jobs:
 
   release-vue:
     name: Release @quikturn/logos-vue
+    if: github.repository == 'quikturn-sdk/Logos'
     runs-on: ubuntu-latest
     needs: release-core
 
@@ -202,6 +206,7 @@ jobs:
 
   release-svelte:
     name: Release @quikturn/logos-svelte
+    if: github.repository == 'quikturn-sdk/Logos'
     runs-on: ubuntu-latest
     needs: release-core
 
@@ -249,6 +254,7 @@ jobs:
 
   release-angular:
     name: Release @quikturn/logos-angular
+    if: github.repository == 'quikturn-sdk/Logos'
     runs-on: ubuntu-latest
     needs: release-core
 
