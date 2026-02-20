@@ -6,12 +6,12 @@
   "author": "Quikturn",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK.git"
+    "url": "https://github.com/quikturn-sdk/Logos.git"
   },
   "bugs": {
-    "url": "https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK/issues"
+    "url": "https://github.com/quikturn-sdk/Logos/issues"
   },
-  "homepage": "https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK#readme",
+  "homepage": "https://github.com/quikturn-sdk/Logos#readme",
   "keywords": [
     "quikturn",
     "logo",

@@ -1,0 +1,46 @@
+name: Mirror to Public
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: mirror-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  mirror:
+    name: Push to public repo
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.PUBLIC_APP_ID }}
+          private-key: ${{ secrets.PUBLIC_APP_PRIVATE_KEY }}
+          owner: quikturn-sdk
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Remove internal-only directories from history
+        run: |
+          pip install git-filter-repo
+          git filter-repo \
+            --invert-paths \
+            --path docs/ \
+            --path .claude/ \
+            --path .qodo/ \
+            --force
+
+      - name: Push to public repo
+        env:
+          APP_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          git remote add public "https://x-access-token:${APP_TOKEN}@github.com/quikturn-sdk/Logos.git"
+          git push public main --force --tags
