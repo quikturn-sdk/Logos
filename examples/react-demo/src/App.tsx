@@ -159,16 +159,16 @@ function SingleLogo() {
         format.
       </p>
       <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
-        <QuikturnLogo domain="github.com" size={64} />
-        <QuikturnLogo domain="stripe.com" size={64} format="webp" />
+        <QuikturnLogo domain="github.com" size={128} />
+        <QuikturnLogo domain="stripe.com" size={128} format="webp" />
         <QuikturnLogo
           domain="vercel.com"
-          size={64}
+          size={128}
           greyscale
         />
         <QuikturnLogo
           domain="figma.com"
-          size={64}
+          size={128}
           href="https://figma.com"
         />
       </div>
@@ -190,13 +190,13 @@ function WebComponentDemo() {
       </p>
       <div style={{ display: "flex", gap: 24, alignItems: "center", flexWrap: "wrap" }}>
         {/* @ts-expect-error -- custom element attributes not in JSX.IntrinsicElements */}
-        <quikturn-logo domain="github.com" token={TOKEN} size="64"></quikturn-logo>
+        <quikturn-logo domain="github.com" token={TOKEN} size="128"></quikturn-logo>
         {/* @ts-expect-error -- custom element */}
-        <quikturn-logo domain="stripe.com" token={TOKEN} size="64"></quikturn-logo>
+        <quikturn-logo domain="stripe.com" token={TOKEN} size="128"></quikturn-logo>
         {/* @ts-expect-error -- custom element */}
-        <quikturn-logo domain="vercel.com" token={TOKEN} size="64" greyscale></quikturn-logo>
+        <quikturn-logo domain="vercel.com" token={TOKEN} size="128" greyscale></quikturn-logo>
         {/* @ts-expect-error -- custom element */}
-        <quikturn-logo domain="figma.com" token={TOKEN} size="64" theme="dark"></quikturn-logo>
+        <quikturn-logo domain="figma.com" token={TOKEN} size="128" theme="dark"></quikturn-logo>
       </div>
       <p style={{ ...descStyle, marginTop: 16 }}>
         Each element above includes a "Powered by Quikturn" attribution badge
@@ -227,12 +227,12 @@ export function App() {
           </p>
         </header>
 
-        <SingleLogo />
-        <WebComponentDemo />
         <LogoWall />
         <PartnerGrid />
         <CustomCarousel />
         <VerticalCarousel />
+        <SingleLogo />
+        <WebComponentDemo />
 
         <footer style={footerStyle}>
           Powered by{" "}
