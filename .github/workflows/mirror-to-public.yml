@@ -1,9 +1,14 @@
 name: Mirror to Public
 
 on:
-  push:
+  workflow_run:
+    workflows: ["Release"]
+    types: [completed]
     branches: [main]
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 concurrency:
   group: mirror-${{ github.ref }}
@@ -40,19 +45,42 @@ jobs:
             --path .qodo/ \
             --force
 
-      - name: Validate token
-        env:
-          APP_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: |
-          if [ -z "${APP_TOKEN}" ]; then
-            echo "::error::GitHub App token is empty — check that the app is installed on quikturn-sdk org and secrets are set"
-            exit 1
-          fi
-          echo "Token generated successfully (length: ${#APP_TOKEN})"
-
       - name: Push to public repo
         env:
           APP_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           git remote add public "https://x-access-token:${APP_TOKEN}@github.com/quikturn-sdk/Logos.git"
           git push public main --force --tags
+
+      - name: Sync GitHub Releases to public repo
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          # Get all releases from EMU repo
+          gh api repos/${{ github.repository }}/releases --paginate --jq '.[] | select(.draft == false)' \
+            --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" > /tmp/emu_releases.json || true
+
+          # Get existing releases on public repo
+          gh api repos/quikturn-sdk/Logos/releases --paginate --jq '.[].tag_name' > /tmp/public_tags.txt || true
+
+          # Create missing releases on public repo
+          cat /tmp/emu_releases.json | jq -c '.' | while read -r release; do
+            tag=$(echo "$release" | jq -r '.tag_name')
+            name=$(echo "$release" | jq -r '.name')
+            body=$(echo "$release" | jq -r '.body')
+            prerelease=$(echo "$release" | jq -r '.prerelease')
+
+            # Skip if release already exists on public
+            if grep -qxF "$tag" /tmp/public_tags.txt 2>/dev/null; then
+              echo "Release $tag already exists on public — skipping"
+              continue
+            fi
+
+            echo "Creating release $tag on public repo"
+            gh api repos/quikturn-sdk/Logos/releases \
+              -f tag_name="$tag" \
+              -f name="$name" \
+              -f body="$body" \
+              -F prerelease="$prerelease" \
+              -F generate_release_notes=false || echo "::warning::Failed to create release $tag"
+          done

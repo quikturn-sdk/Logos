@@ -67,7 +67,7 @@
     "server-only": "^0.0.1"
   },
   "peerDependencies": {
-    "next": "^14 || ^15",
+    "next": "^14 || ^15 || ^16",
     "react": ">=18",
     "react-dom": ">=18"
   },
@@ -79,7 +79,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "jsdom": "^28.0.0",
-    "next": "^15.0.0",
+    "next": "^16.1.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "semantic-release": "^25.0.3",
