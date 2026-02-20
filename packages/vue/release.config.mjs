@@ -3,6 +3,7 @@
  */
 export default {
   branches: ["main"],
+  repositoryUrl: "https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK.git",
   tagFormat: "vue-v${version}",
   plugins: [
     "@semantic-release/commit-analyzer",

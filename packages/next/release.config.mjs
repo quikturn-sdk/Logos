@@ -3,6 +3,7 @@
  */
 export default {
   branches: ["main"],
+  repositoryUrl: "https://github.com/Quikturn-PowerPoint-Add-In/Logo-SDK.git",
   tagFormat: "next-v${version}",
   plugins: [
     "@semantic-release/commit-analyzer",
